@@ -1,81 +1,105 @@
+$w: white;
+$b: black;
+
+$de: #00B7E2;
+$meh: #5200D3;
+$pre: #FF0062;
+
 body{
 	font-family: 'Roboto',sans-serif;
 	font-size: 24px;
 	display:block;
 	background-color: #ddd;
 	&.status-de {
+		#sitelogo, #statusGraphic, #credits {
+			svg {
+				fill: $de;
+			}
+		}
 		#statusGraphic svg {
 			bottom: 0px;
-			fill: #00B7E2;
 		}
 		#menu a {
-			background-color: #00B7E200;
 			&:hover {
-				background-color: #00B7E2FF;
+				color: rgba($de, 1.0);
 			}
 		}
 		#GitHubPrj:hover {
-			color: #00B7E2FF;
+			color: rgba($de, 1.0);
 		}
 	}
 	&.status-meh {
+		#sitelogo, #statusGraphic, #credits {
+			svg {
+				fill: $meh;
+			}
+		}
 		#statusGraphic svg {
 			bottom: 24px;
-			fill: #5200D3;
 		}
 		#menu a {
-			background-color: #5200D300;
 			&:hover {
-				background-color: #5200D3FF;
+				color: $meh;
 			}
 		}
 		#GitHubPrj:hover {
-			color: #5200D3FF;
+			color: $meh;
 		}
 	}
 	&.status-pre {
+		#sitelogo, #statusGraphic, #credits {
+			svg {
+				fill: $pre;
+			}
+		}
 		#statusGraphic svg {
 			bottom: 48px;
-			fill: #FF0062
 		}
 		#menu a {
-			background-color: #FF006200;
 			&:hover {
-				background-color: #FF0062FF;
+				color: $pre;
 			}
 		}
 		#GitHubPrj:hover {
-			color: #FF0062FF;
+			color: $pre;
 		}
 	}
 }
 
 svg {
+	transition: fill .3s;
 	height: 100%;
 }
 
-header {
+header, section, footer {
 	display: flex;
+	align-items: center;
 	flex-wrap: wrap;
 	justify-content: space-between;
-	align-items: center;
 	width:100vw;
 	padding: 24px;
 	box-sizing: border-box;
+}
+
+header {
 	#sitelogo {
-		display: block;
+		display: flex;
+		width: 200px;
 		height: 36px;
+		justify-content: flex-start;
 	}
 	#scriptStatus {
 		text-align: center;
 		font-size: 50%;
 		font-weight: 400;
 		display: block;
-		height: 32px;
+		height: 40px;
 		#statusCont {
 			display: flex;
 			height: 20px;
 			vertical-align: top;
+			justify-content: center;
+			margin-right: 18px;
 			#statusGraphic {
 				height: 24px;
 				width: 56px;
@@ -99,56 +123,35 @@ header {
 		}
 	}
 	#menu {
-		display: block;
-		justify-content: flex-end;
+		display: flex;
+		justify-content: center;
 		align-items: center;
-		box-sizing: border-box;
 		font-size: 75%;
 		font-weight: 900;
 		letter-spacing: .2em;
 		text-transform: uppercase;
-		right: 0;
-		text-align: center;
+		width: 182	px;
 		a {
 			display: inline-block;
+			text-align: center;
+			width: 100px;
 			color: black;
-			padding: 8px 12px 8px 14px; //correcting for letter-spacing
-			margin: 0 0 0 16px;
-			transition: background-color .3s, color .3s;
-			border-radius: 8px;
-			&:first-child {
-				margin: 0;
-			}
-			&:first-child {
-
-			}
-			&:nth-child(2) {
-
-			}
+			transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
 			&:hover {
-				color: white;
+				letter-spacing: .33em;
 			}
 		}
 	}
 }
 
 section {
-	height: calc(100vh - 176px);
+	height: calc(100vh - 184px);
+	background-color: gray;
 }
 
 footer {
-	display: flex;
-	position: absolute;
-	flex-wrap: wrap;
-	bottom: 0;
-	width: 100vw;
-	height: 96px;
-	padding: 24px;
-	box-sizing: border-box;
-	align-items: center;
-	align-content: flex-end;
-	justify-content: space-around;
 	font-size: 60%;
+	font-weight: 600;
 	color: #0000;
 	text-align: center;
 	a {
@@ -198,16 +201,25 @@ footer {
 	}
 }
 
-@media screen and (max-width: 800px) {
-	header #sitelogo {
-		left: calc(130% - 682px);
+@media screen and (max-width: 650px) {
+	header, footer {
+		justify-content: center;
 	}
-}
-
-
-@media screen and (max-width: 580px) {
-	footer>* {
+	header>* {
 		width: 100%;
-		margin: 8px 0 !important;
+		margin-bottom: 16px;
+		&:last-child {
+			margin: 0;
+		}
+	}
+	section {
+		height: calc(100vh - 338px);
+	}
+	footer {
+		color: #0005;
+		>* {
+			width: 100%;
+			margin: 8px 0 !important;
+		}
 	}
 }
