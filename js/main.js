@@ -38,6 +38,11 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 		console.log('selection made');
 	});
 
+	blnk.on(touch?'tap':'click', function() {
+		ans.removeClass('selected');
+		q.removeClass('selectionMade');
+		console.log('cleared');
+	});
 	// When finger leaves screen or mouse finishes clicking
 	ans.on(touch?'dragLeave touchend':'mouseup', function() {
 		if (q.hasClass('open')) {
@@ -45,13 +50,9 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 			$(this).addClass('selected');
 			q.addClass('selectionMade');
 			q.removeClass('open');
+			blnk.off();
 			console.log('closed');
 		}
-	});
-	blnk.on(touch?'tap':'mousedown', function() {
-		ans.removeClass('selected');
-		q.removeClass('selectionMade');
-		console.log('cleared');
 	});
 });
 
