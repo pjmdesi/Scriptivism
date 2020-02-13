@@ -15,6 +15,15 @@ function saveQ(q) {
 	console.log(q);
 }
 
+function openAns(q) {
+	q.addClass('open');
+}
+
+function closeAns(q) {
+	q.removeClass('open');
+	q.find('.answer').off();
+}
+
 // When select is touched or hovered
 $('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function() {
 	let q = $(this);
@@ -22,7 +31,7 @@ $('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function() {
 	let ans = q.find('.answer'),
 		blnk = q.find('.blank');
 
-	q.addClass('open');
+	openAns(q);
 
 	if (touch) {
 		// when answer is tapped
@@ -30,15 +39,13 @@ $('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function() {
 			ans.removeClass('selected');
 			q.addClass('selectionMade');
 			$(this).addClass('selected');
-			q.removeClass('open');
-			console.log('selection made');
+			closeAns(q)
 		});
 
 		// when clear is tapped
 		blnk.on('tap', function() {
 			ans.removeClass('selected');
 			q.removeClass('selectionMade');
-			console.log('cleared');
 		});
 	} else {
 		// when answer is hovered over
@@ -46,29 +53,23 @@ $('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function() {
 			ans.removeClass('selected');
 			q.addClass('selectionMade');
 			$(this).addClass('selected');
-			console.log('selection made');
 		});
 
 		// when answer is clicked
 		ans.on('click', function() {
-			if (q.hasClass('open')) {
-				q.removeClass('open');
-				console.log('closed');
-			}
+			closeAns(q)
 		});
 
 		// when clear is clicked
 		blnk.on('click', function() {
 			ans.removeClass('selected');
 			q.removeClass('selectionMade');
-			console.log('cleared');
 		});
 	}
 });
 
 $('.content .card .select').eq(0).on('mouseleave', function() {
-	$(this).removeClass('open');
-	console.log('closed');
+	closeAns($(this));
 });
 
 function moveQs(callback) {
