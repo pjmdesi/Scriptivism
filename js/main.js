@@ -3,7 +3,10 @@ let touch = false;
 function detectTouch() {
 	$('body').on('touchstart', function() {
 		touch = true;
-		$(this).css({background:'red'});
+		$('.content .card .select').touch();
+		$('.content .card .select .answer').touch();
+		$('.content .card .select .blank').touch();
+		console.log('touch device');
 	});
 	return touch;
 }
@@ -12,7 +15,8 @@ function saveQ(q) {
 	console.log(q);
 }
 
-$('.content .card .select').eq(0).on(/*touch?*/'tapAndHold'/*:'mouseenter'*/, function() {
+// When select is touched or hovered
+$('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', function() {
 	let q = $(this);
 
 	let ans = q.find('.answer'),
@@ -22,31 +26,36 @@ $('.content .card .select').eq(0).on(/*touch?*/'tapAndHold'/*:'mouseenter'*/, fu
 
 	console.log('opened');
 
-	ans.on(/*touch?*/'dragEnter'/*:'mouseenter'*/, function() {
+	// When finger or mouse leaves select
+
+	// When mouse or finger moves over an answer or is clicked
+	ans.on(touch?'dragEnter':'mouseenter', function() {;
 		ans.removeClass('selected');
 		q.addClass('selectionMade');
 		$(this).addClass('selected');
+		console.log('selection made');
 	});
-	ans.on(touch?'touchend':'mouseup', function() {
+
+	// When finger leaves screen or mouse finishes clicking
+	ans.on(touch?'dragLeave touchend':'mouseup', function() {
 		if (q.hasClass('open')) {
 			ans.removeClass('selected');
 			$(this).addClass('selected');
 			q.addClass('selectionMade');
 			q.removeClass('open');
-			console.log('selection made');
+			console.log('closed');
 		}
 	});
-	blnk.on(touch?'touchend':'mousedown', function() {
-		if (q.height() == 88) {
-			ans.removeClass('selected');
-			q.removeClass('selectionMade');
-			console.log('cleared');
-		}
+	blnk.on(touch?'tap':'mousedown', function() {
+		ans.removeClass('selected');
+		q.removeClass('selectionMade');
+		console.log('cleared');
 	});
 });
 
-$('.content .card .select').eq(0).on(touch?'touchend':'mouseleave', function() {
+$('.content .card .select').eq(0).on(touch?'dragLeave':'mouseleave', function() {
 	$(this).removeClass('open');
+	console.log('closed');
 });
 
 function moveQs(callback) {
@@ -98,7 +107,6 @@ let changePage = (l) => {
 // things to run when DOM is ready
 $(document).ready(function() {
 	detectTouch()
-	$('.content .card .select').touch();
 })
 
 $('a').click(function(e) {
