@@ -3,6 +3,7 @@ let touch = false;
 function detectTouch() {
 	$('body').on('touchstart', function() {
 		touch = true;
+		$(this).css(background:'red');
 	});
 	return touch;
 }
@@ -97,6 +98,7 @@ let changePage = (l) => {
 // things to run when DOM is ready
 $(document).ready(function() {
 	detectTouch()
+	$('.content .card .select').touch();
 })
 
 $('a').click(function(e) {
