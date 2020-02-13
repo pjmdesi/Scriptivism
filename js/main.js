@@ -22,7 +22,7 @@ $('.content .card .select').eq(0).on(/*touch?*/'tapAndHold'/*:'mouseenter'*/, fu
 
 	console.log('opened');
 
-	ans.on(touch?'dragOver':'mouseenter', function() {
+	ans.on(/*touch?*/'dragEnter'/*:'mouseenter'*/, function() {
 		ans.removeClass('selected');
 		q.addClass('selectionMade');
 		$(this).addClass('selected');
