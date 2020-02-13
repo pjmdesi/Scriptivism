@@ -3,7 +3,7 @@ let touch = false;
 function detectTouch() {
 	$('body').on('touchstart', function() {
 		touch = true;
-		$(this).css(background:'red');
+		$(this).css({background:'red'});
 	});
 	return touch;
 }
