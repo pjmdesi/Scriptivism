@@ -16,22 +16,11 @@ function saveQ(q) {
 }
 
 function openAns(q) {
-	q.addClass('open');
-}
-
-function closeAns(q) {
-	q.removeClass('open');
-	q.find('.answer').off();
-}
-
-// When select is touched or hovered
-$('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function() {
-	let q = $(this);
 
 	let ans = q.find('.answer'),
 		blnk = q.find('.blank');
 
-	openAns(q);
+		console.log('open');
 
 	if (touch) {
 		// when answer is tapped
@@ -66,6 +55,23 @@ $('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function() {
 			q.removeClass('selectionMade');
 		});
 	}
+}
+
+function closeAns(q) {
+
+	let ans = q.find('.answer'),
+		blnk = q.find('.blank');
+
+	q.removeClass('open');
+	ans.off('tap click mouseenter');
+	blnk.off('tap click')
+}
+
+// When select is tapped or hovered over
+$('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function(event) {
+	event.stopPropagation();
+	$(this).addClass('open');
+	openAns($(this));
 });
 
 $('.content .card .select').eq(0).on('mouseleave', function() {
