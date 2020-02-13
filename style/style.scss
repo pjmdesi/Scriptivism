@@ -235,7 +235,6 @@ button {
 	transition: height .3s ease, margin .3s ease, border .1s ease;
 	border-bottom: 3px solid $b;
 	.answer, .blank {
-		pointer-events: none;
 		position: relative;
 		box-sizing: border-box;
 		cursor: pointer;
@@ -263,7 +262,6 @@ button {
 	&.open {
 		height: calc(3 * #{$ansH} - 8px);
 		.answer, .blank {
-			pointer-events: all;
 			top: 0px !important;
 		}
 		.blank {
