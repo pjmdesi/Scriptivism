@@ -7,6 +7,7 @@ function detectTouch() {
 		$('.content .card .select .answer').touch();
 		$('.content .card .select .blank').touch();
 		console.log('touch device');
+		$(this).css({background:'red'})
 	});
 	return touch;
 }
@@ -24,6 +25,7 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 
 	q.addClass('open');
 
+	q.css({background:'green'})
 	console.log('opened');
 
 	// When finger or mouse leaves select
