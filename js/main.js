@@ -21,12 +21,12 @@ $('.content .card .select').eq(0).on(touch?'touchstart':'mouseenter', function()
 
 	console.log('opened');
 
-	ans.on(touch?'touchstart':'mouseenter', function() {
+	ans.on(touch?'dragOver':'mouseenter', function() {
 		ans.removeClass('selected');
 		q.addClass('selectionMade');
 		$(this).addClass('selected');
 	});
-	ans.on(touch?'touchstart':'mouseup', function() {
+	ans.on(touch?'touchend':'mouseup', function() {
 		if (q.hasClass('open')) {
 			ans.removeClass('selected');
 			$(this).addClass('selected');
