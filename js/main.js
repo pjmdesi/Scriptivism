@@ -11,7 +11,7 @@ function saveQ(q) {
 	console.log(q);
 }
 
-$('.content .card .select').eq(0).on(touch?'touchstart':'mouseenter', function() {
+$('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', function() {
 	let q = $(this);
 
 	let ans = q.find('.answer'),
