@@ -12,7 +12,7 @@ function saveQ(q) {
 	console.log(q);
 }
 
-$('.content .card .select').eq(0).on(touch?'tapAndHold':/*'mouseenter'*/, function() {
+$('.content .card .select').eq(0).on(/*touch?*/'tapAndHold'/*:'mouseenter'*/, function() {
 	let q = $(this);
 
 	let ans = q.find('.answer'),
