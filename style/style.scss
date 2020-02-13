@@ -5,10 +5,9 @@ $de: #00B7E2;
 $meh: #5200D3;
 $pre: #FF0062;
 
-body{
+body {
 	font-family: 'Roboto',sans-serif;
 	font-size: 24px;
-	display:block;
 	background-color: #ddd;
 	&.status-de {
 		#sitelogo, #statusGraphic, #credits {
@@ -19,13 +18,11 @@ body{
 		#statusGraphic svg {
 			bottom: 0px;
 		}
-		#menu a {
-			&:hover {
-				color: rgba($de, 1.0);
-			}
-		}
-		#GitHubPrj:hover {
+		#startButton:hover, #main a:hover, #GitHubPrj:hover, .answer {
 			color: rgba($de, 1.0);
+		}
+		button, .selected {
+			background-color: $de;
 		}
 	}
 	&.status-meh {
@@ -37,13 +34,11 @@ body{
 		#statusGraphic svg {
 			bottom: 24px;
 		}
-		#menu a {
-			&:hover {
-				color: $meh;
-			}
+		#startButton:hover, #main a:hover, #GitHubPrj:hover, .answer {
+			color: rgba($meh, 1.0);
 		}
-		#GitHubPrj:hover {
-			color: $meh;
+		button, .selected {
+			background-color: $meh;
 		}
 	}
 	&.status-pre {
@@ -55,26 +50,28 @@ body{
 		#statusGraphic svg {
 			bottom: 48px;
 		}
-		#menu a {
-			&:hover {
-				color: $pre;
-			}
+		#startButton:hover, #main a:hover, #GitHubPrj:hover, .answer {
+			color: rgba($pre, 1.0);
 		}
-		#GitHubPrj:hover {
-			color: $pre;
+		button, .selected {
+			background-color: $pre;
 		}
 	}
 }
 
 svg {
+	-webkit-transition: fill .3s;
 	transition: fill .3s;
 	height: 100%;
 }
 
-header, section, footer {
+header, footer {
+	display: -webkit-box;
 	display: flex;
+	-webkit-box-align: center;
 	align-items: center;
 	flex-wrap: wrap;
+	-webkit-box-pack: justify;
 	justify-content: space-between;
 	width:100vw;
 	padding: 24px;
@@ -83,9 +80,11 @@ header, section, footer {
 
 header {
 	#sitelogo {
+		display: -webkit-box;
 		display: flex;
 		width: 200px;
 		height: 36px;
+		-webkit-box-pack: start;
 		justify-content: flex-start;
 	}
 	#scriptStatus {
@@ -95,21 +94,26 @@ header {
 		display: block;
 		height: 40px;
 		#statusCont {
+			display: -webkit-box;
 			display: flex;
 			height: 20px;
 			vertical-align: top;
+			-webkit-box-pack: center;
 			justify-content: center;
 			margin-right: 18px;
 			#statusGraphic {
 				height: 24px;
 				width: 56px;
 				overflow: hidden;
+				display: -webkit-box;
 				display: flex;
 				flex-wrap: wrap;
+				-webkit-box-pack: end;
 				justify-content: flex-end;
 				svg {
 					height: 20px;
 					position: relative;
+					-webkit-transition: bottom .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), fill .15s;
 					transition: bottom .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), fill .15s;
 					margin: 2px 0;
 				}
@@ -123,8 +127,11 @@ header {
 		}
 	}
 	#menu {
+		display: -webkit-box;
 		display: flex;
+		-webkit-box-pack: center;
 		justify-content: center;
+		-webkit-box-align: center;
 		align-items: center;
 		font-size: 75%;
 		font-weight: 900;
@@ -136,6 +143,7 @@ header {
 			text-align: center;
 			width: 100px;
 			color: black;
+			-webkit-transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
 			transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
 			&:hover {
 				letter-spacing: .33em;
@@ -144,9 +152,142 @@ header {
 	}
 }
 
-section {
+#main {
+	position: relative;
+	display: -webkit-box;
+	display: flex;
+	flex-wrap: nowrap;
+	-webkit-box-pack: start;
+	justify-content: flex-start;
+	overflow: hidden;
 	height: calc(100vh - 184px);
-	background-color: gray;
+	width: 100vw;
+	.content {
+		display: -webkit-box;
+		display: flex;
+		position: relative;
+		left: 0%;
+		-webkit-box-pack: center;
+		justify-content: center;
+		-webkit-box-align: center;
+		align-items: center;
+		min-width: 100vw;
+		height: 100%;
+		.card {
+			position: relative;
+			background-color: $w;
+			border-radius: 22px;
+			padding: 13px;
+			max-width: 720px;
+			margin: 25px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+			p {
+				margin-bottom: 24px;
+			}
+			.qCount {
+				font-family: monospace;
+				position: relative;
+				left: 4px;
+				color: rgba($b, 0.4);
+				font-size: 60%;
+			}
+			button {
+				margin-top: 16px;
+			}
+		}
+	}
+}
+
+button {
+	border-radius: 10px;
+	font-weight: 600;
+	cursor: pointer;
+	padding: 8px 0 8px 2px;
+}
+
+.select {
+	$ansH: 32px;
+	font-weight: 700;
+	display: inline-block;
+	position: relative;
+	vertical-align: middle;
+	height: $ansH;
+	top: -2px;
+	text-align: center;
+	overflow: hidden;
+	box-sizing: content-box;
+	white-space: nowrap;
+	-webkit-transition: height .3s ease, margin .3s ease, border .1s ease;
+	transition: height .3s ease, margin .3s ease, border .1s ease;
+	border-bottom: 3px solid $b;
+	.answer, .blank {
+		position: relative;
+		box-sizing: border-box;
+		cursor: pointer;
+		top: -$ansH;
+		height: $ansH;
+		padding: 4px 8px;
+		-webkit-transition: height .3s ease, background-color .3s, top .3s ease, color .3s;
+		transition: height .3s ease, background-color .3s, top .3s ease, color .3s;
+		border-radius: 10px;
+		&.selected {
+			color: $w;
+			&.topAns {
+				top: 0px;
+			}
+			&.botAns {
+				top: calc(-2 * #{$ansH});
+			}
+		}
+	}
+	.blank {
+		color: rgba(0,0,0,0);
+		line-height: 18px;
+	}
+	&.open {
+		height: calc(3 * #{$ansH} - 8px);
+		.answer, .blank {
+			top: 0px !important;
+		}
+		.blank {
+			height: calc(#{$ansH} - 8px);
+		}
+	}
+	&.open.selectionMade {
+		.blank {
+			color: rgba(0,0,0,.4);
+		}
+	}
+	&.open, &.selectionMade {
+		border-bottom-width: 0px;
+	}
+}
+
+button {
+	color: $w;
+	font-size: 60%;
+	width: 100%;
+	text-transform: uppercase;
+	letter-spacing: .2em;
+	-webkit-transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
+	transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
+	&:hover {
+		letter-spacing: .4em;
+	}
+}
+
+#startButton {
+	font-weight: 900;
+	font-size: 48px;
+	color: $b;
+	background-color: transparent;
+}
+
+.qBtn {
+
 }
 
 footer {
@@ -155,11 +296,14 @@ footer {
 	color: #0000;
 	text-align: center;
 	a {
+		-webkit-transition: color .3s, box-shadow .3s ease, bottom .3s ease;
 		transition: color .3s, box-shadow .3s ease, bottom .3s ease;
 	}
 	#credits {
+		display: -webkit-box;
 		display: flex;
 		align-content: center;
+		-webkit-box-pack: center;
 		justify-content: center;
 		position: relative;
 		border-radius: 50%;
@@ -203,6 +347,7 @@ footer {
 
 @media screen and (max-width: 650px) {
 	header, footer {
+		-webkit-box-pack: center;
 		justify-content: center;
 	}
 	header>* {

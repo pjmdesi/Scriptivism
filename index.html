@@ -11,7 +11,7 @@
 				console.log('IE detected');
 				setTimeout(function () {
 					var page = document.getElementsByTagName('html')[0];
-					page.innerHTML = '<div style="max-width:720px; text-align:justify"><h1>Internet Explorer Detected!</h1><p>You are using a browser that is severely out-of-date, leaving you and your entire network open to vulnerabilities and cyber attacks. As a courtesy, we will not load this website to protect you from those possible dangers.</p><p>Please see <a href="https://techcommunity.microsoft.com/t5/Windows-IT-Pro-Blog/The-perils-of-using-Internet-Explorer-as-your-default-browser/ba-p/331732">this article from Microsoft</a> who explain why you should no logner use their Internet Explorer product.</p><p>Please be safe. Download one of these fine browsers now:</p><p><ul><li><a href="https://www.google.com/chrome/index.html">Google Chrome</a></li><li><a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a></li><li><a href="https://www.microsoft.com/en-us/windows/microsoft-edge">Microsoft Edge</a></li></ul></p></div>';
+					page.innerHTML = '<div style="max-width:720px; text-align:justify;margin:auto;font-family:sans-serif;"><h1>Internet Explorer Detected!</h1><p>You are using a browser that is severely out-of-date, leaving you and your entire network open to vulnerabilities and cyber attacks. As a courtesy, we will not load this website to protect you from those possible dangers.</p><p>Please see <a href="https://techcommunity.microsoft.com/t5/Windows-IT-Pro-Blog/The-perils-of-using-Internet-Explorer-as-your-default-browser/ba-p/331732">this article from Microsoft</a> who explain why you should no logner use their Internet Explorer product.</p><p>Please be safe. Download one of these fine browsers now:</p><p><ul><li><a href="https://www.google.com/chrome/index.html">Google Chrome</a></li><li><a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a></li><li><a href="https://www.microsoft.com/en-us/windows/microsoft-edge">Microsoft Edge</a></li></ul></p></div>';
 				}, 500);
 			}
 		</script>
@@ -44,12 +44,24 @@
 			<div id="menu"><a href="/score">Score</a><a href="/about">About</a>
 			</div>
 		</header>
-		<section id="questions">
-			<div class="arrow prev">
+		<div id="main">
+			<div class="content">
+				<button href="#start" id="startButton" onclick="nextQ()">Start</button>
 			</div>
-			<div class="arrow next">
+			<div class="content">
+				<div class="card">
+					<p class="qCount">q1</p>
+					<span>I</span>
+					<div class="select">
+						<div class="answer topAns">could of</div>
+						<div class="blank">×</div>
+						<div class="answer botAns">could have</div>
+					</div>
+					<span>gotten over it. And this sentence is to force a line wrap to see what happens.</span>
+					<button class="qBnt" onclick="nextQ()">Next</button>
+				</div>
 			</div>
-		</section>
+		</div>
 		<footer>
 			<a id="GitHubPrj" href="https://github.com/pjmdesi/Scriptivism">View Project on GitHub</a>
 			<a id="credits" href="https://pjm.desi">
@@ -62,6 +74,7 @@
 				<a id="twitch" href="https://www.twitch.tv/tectix0">twitch</a>
 			</div>
 		</footer>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 		<script src="js/main.js" charset="utf-8"></script>
 	</body>
 </html>
