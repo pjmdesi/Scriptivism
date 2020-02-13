@@ -7,7 +7,7 @@ function detectTouch() {
 		$('.content .card .select .answer').touch();
 		$('.content .card .select .blank').touch();
 		console.log('touch device');
-		$(this).css({background:'red'})
+		$(this).css({background:'blue'})
 	});
 	return touch;
 }
@@ -57,6 +57,7 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 
 $('.content .card .select').eq(0).on(touch?'dragLeave':'mouseleave', function() {
 	$(this).removeClass('open');
+	$(this)find('.blank').off('tap mousedown')
 	console.log('closed');
 });
 
