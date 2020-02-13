@@ -18,6 +18,7 @@ function saveQ(q) {
 
 // When select is touched or hovered
 $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', function() {
+
 	let q = $(this);
 
 	let ans = q.find('.answer'),
@@ -27,33 +28,32 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 
 	$('body').css({background:'green'})
 	console.log('opened');
-
-	// When finger or mouse leaves select
-
-	// When mouse or finger moves over an answer or is clicked
-	ans.on(touch?'touchstart dragEnter':'mouseenter', function() {;
-		ans.removeClass('selected');
-		q.addClass('selectionMade');
-		$(this).addClass('selected');
-		console.log('selection made');
-	});
-
-	blnk.on(touch?'tap':'click', function() {
-		ans.removeClass('selected');
-		q.removeClass('selectionMade');
-		console.log('cleared');
-	});
-	// When finger leaves screen or mouse finishes clicking
-	ans.on(touch?'dragLeave touchend':'mouseup', function() {
-		if (q.hasClass('open')) {
+	
+	setTimeout(function () {
+		ans.on(touch?'touchstart dragEnter':'mouseenter', function() {;
 			ans.removeClass('selected');
-			$(this).addClass('selected');
 			q.addClass('selectionMade');
-			q.removeClass('open');
-			blnk.off();
-			console.log('closed');
-		}
-	});
+			$(this).addClass('selected');
+			console.log('selection made');
+		});
+
+		blnk.on(touch?'tap':'click', function() {
+			ans.removeClass('selected');
+			q.removeClass('selectionMade');
+			console.log('cleared');
+		});
+		// When finger leaves screen or mouse finishes clicking
+		ans.on(touch?'dragLeave touchend':'mouseup', function() {
+			if (q.hasClass('open')) {
+				ans.removeClass('selected');
+				$(this).addClass('selected');
+				q.addClass('selectionMade');
+				q.removeClass('open');
+				blnk.off();
+				console.log('closed');
+			}
+		});
+	}, 300);
 });
 
 $('.content .card .select').eq(0).on(touch?'touchend dragLeave':'mouseleave', function() {
