@@ -7,7 +7,7 @@ function detectTouch() {
 		$('.content .card .select .answer').touch();
 		$('.content .card .select .blank').touch();
 		console.log('touch device');
-		$(this).css({background:'blue'})
+		$(this).css({background:'purple'})
 	});
 	return touch;
 }
@@ -31,7 +31,7 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 	// When finger or mouse leaves select
 
 	// When mouse or finger moves over an answer or is clicked
-	ans.on(touch?'dragEnter':'mouseenter', function() {;
+	ans.on(touch?'touchstart dragEnter':'mouseenter', function() {;
 		ans.removeClass('selected');
 		q.addClass('selectionMade');
 		$(this).addClass('selected');
@@ -55,7 +55,7 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 	});
 });
 
-$('.content .card .select').eq(0).on(touch?'dragLeave':'mouseleave', function() {
+$('.content .card .select').eq(0).on(touch?'touchend dragLeave':'mouseleave', function() {
 	$(this).removeClass('open');
 	$(this).find('.blank').off();
 	console.log('closed');
