@@ -44,7 +44,7 @@ $('.content .card .select').eq(0).on(touch?'touchstart':'mouseenter', function()
 	});
 });
 
-$('.content .card .select').eq(0).on('mouseleave', function() {
+$('.content .card .select').eq(0).on(touch?'touchend':'mouseleave', function() {
 	$(this).removeClass('open');
 });
 
