@@ -26,7 +26,7 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 
 	if (touch) {
 		// when answer is tapped
-		ans.on('tap', function() {;
+		ans.on('tap', function() {
 			ans.removeClass('selected');
 			q.addClass('selectionMade');
 			$(this).addClass('selected');
@@ -42,7 +42,7 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 		});
 	} else {
 		// when answer is hovered over
-		ans.on('mouseenter', function() {;
+		ans.on('mouseenter', function() {
 			ans.removeClass('selected');
 			q.addClass('selectionMade');
 			$(this).addClass('selected');
