@@ -25,7 +25,7 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 
 	q.addClass('open');
 
-	q.css({background:'green'})
+	$('body').css({background:'green'})
 	console.log('opened');
 
 	// When finger or mouse leaves select
