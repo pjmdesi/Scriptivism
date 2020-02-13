@@ -18,7 +18,6 @@ function saveQ(q) {
 
 // When select is touched or hovered
 $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', function() {
-
 	let q = $(this);
 
 	let ans = q.find('.answer'),
@@ -26,34 +25,47 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 
 	q.addClass('open');
 
-	$('body').css({background:'green'})
-	console.log('opened');
-	
-	setTimeout(function () {
-		ans.on(touch?'touchstart dragEnter':'mouseenter', function() {;
+	if (touch) {
+		// when answer is tapped
+		ans.on('tap', function() {;
 			ans.removeClass('selected');
 			q.addClass('selectionMade');
 			$(this).addClass('selected');
 			console.log('selection made');
 		});
 
-		blnk.on(touch?'tap':'click', function() {
+		//when clear is tapped
+		blnk.on('tap', function() {
 			ans.removeClass('selected');
 			q.removeClass('selectionMade');
 			console.log('cleared');
 		});
-		// When finger leaves screen or mouse finishes clicking
-		ans.on(touch?'dragLeave touchend':'mouseup', function() {
-			if (q.hasClass('open')) {
-				ans.removeClass('selected');
-				$(this).addClass('selected');
-				q.addClass('selectionMade');
-				q.removeClass('open');
-				blnk.off();
-				console.log('closed');
-			}
+	} else {
+		// when answer is hovered over
+		ans.on('mouseenter', function() {;
+			ans.removeClass('selected');
+			q.addClass('selectionMade');
+			$(this).addClass('selected');
+			console.log('selection made');
 		});
-	}, 300);
+	}
+
+	blnk.on(touch?'tap':'click', function() {
+		ans.removeClass('selected');
+		q.removeClass('selectionMade');
+		console.log('cleared');
+	});
+	// When finger leaves screen or mouse finishes clicking
+	ans.on(touch?'dragLeave touchend':'mouseup', function() {
+		if (q.hasClass('open')) {
+			ans.removeClass('selected');
+			$(this).addClass('selected');
+			q.addClass('selectionMade');
+			q.removeClass('open');
+			blnk.off();
+			console.log('closed');
+		}
+	});
 });
 
 $('.content .card .select').eq(0).on(touch?'touchend dragLeave':'mouseleave', function() {

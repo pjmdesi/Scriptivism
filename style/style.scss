@@ -257,6 +257,7 @@ button {
 	.blank {
 		color: rgba(0,0,0,0);
 		line-height: 18px;
+		left: 100%;
 	}
 	&.open {
 		height: calc(3 * #{$ansH} - 8px);
@@ -265,6 +266,7 @@ button {
 		}
 		.blank {
 			height: calc(#{$ansH} - 8px);
+			left: 0;
 		}
 	}
 	&.open.selectionMade {
