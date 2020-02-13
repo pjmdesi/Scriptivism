@@ -7,7 +7,6 @@ function detectTouch() {
 		$('.content .card .select .answer').touch();
 		$('.content .card .select .blank').touch();
 		console.log('touch device');
-		$(this).css({background:'purple'})
 	});
 	return touch;
 }
@@ -31,10 +30,11 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 			ans.removeClass('selected');
 			q.addClass('selectionMade');
 			$(this).addClass('selected');
+			q.removeClass('open');
 			console.log('selection made');
 		});
 
-		//when clear is tapped
+		// when clear is tapped
 		blnk.on('tap', function() {
 			ans.removeClass('selected');
 			q.removeClass('selectionMade');
@@ -48,29 +48,26 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 			$(this).addClass('selected');
 			console.log('selection made');
 		});
-	}
 
-	blnk.on(touch?'tap':'click', function() {
-		ans.removeClass('selected');
-		q.removeClass('selectionMade');
-		console.log('cleared');
-	});
-	// When finger leaves screen or mouse finishes clicking
-	ans.on(touch?'dragLeave touchend':'mouseup', function() {
-		if (q.hasClass('open')) {
+		// when answer is clicked
+		ans.on('click', function() {
+			if (q.hasClass('open')) {
+				q.removeClass('open');
+				console.log('closed');
+			}
+		});
+
+		// when clear is clicked
+		blnk.on('click', function() {
 			ans.removeClass('selected');
-			$(this).addClass('selected');
-			q.addClass('selectionMade');
-			q.removeClass('open');
-			blnk.off();
-			console.log('closed');
-		}
-	});
+			q.removeClass('selectionMade');
+			console.log('cleared');
+		});
+	}
 });
 
 $('.content .card .select').eq(0).on(touch?'touchend dragLeave':'mouseleave', function() {
 	$(this).removeClass('open');
-	$(this).find('.blank').off();
 	console.log('closed');
 });
 
