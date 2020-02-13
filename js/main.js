@@ -16,7 +16,7 @@ function saveQ(q) {
 }
 
 // When select is touched or hovered
-$('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', function() {
+$('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function() {
 	let q = $(this);
 
 	let ans = q.find('.answer'),
@@ -66,7 +66,7 @@ $('.content .card .select').eq(0).on(touch?'tap tapAndHold':'mouseenter', functi
 	}
 });
 
-$('.content .card .select').eq(0).on(touch?'touchend dragLeave':'mouseleave', function() {
+$('.content .card .select').eq(0).on('mouseleave', function() {
 	$(this).removeClass('open');
 	console.log('closed');
 });
