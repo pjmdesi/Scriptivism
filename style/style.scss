@@ -16,61 +16,48 @@ body {
 	justify-content: space-between;
 	font-family: 'Roboto',sans-serif;
 	font-size: 24px;
-	background-color: #ddd;
+	background-color: #eee;
 	height: 100vh;
 	width: 100vw;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
-	&.status-de {
-		#sitelogo, #statusGraphic, #credits {
-			svg {
-				fill: $de;
-			}
-		}
-		#statusGraphic svg {
-			bottom: 0px;
-		}
-		#startButton:hover, #main a:hover, #GitHubPrj:hover, .answer {
-			color: rgba($de, 1.0);
-		}
-		button, .selected {
-			background-color: $de;
+}
+
+a {
+	font-weight: 700;
+	-webkit-transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
+	-webkit-transition: bottom .3s ease, background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
+	-webkit-transition: bottom .3s ease, background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), box-shadow .3s ease;
+	transition: bottom .3s ease, background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), box-shadow .3s ease;
+	&:hover {
+		letter-spacing: .125em;
+	}
+	#menu &{
+		letter-spacing: .175em;
+		&:hover {
+			letter-spacing: .35em;
 		}
 	}
-	&.status-meh {
-		#sitelogo, #statusGraphic, #credits {
-			svg {
-				fill: $meh;
-			}
-		}
-		#statusGraphic svg {
-			bottom: 24px;
-		}
-		#startButton:hover, #main a:hover, #GitHubPrj:hover, .answer {
-			color: rgba($meh, 1.0);
-		}
-		button, .selected {
-			background-color: $meh;
-		}
-	}
-	&.status-pre {
-		#sitelogo, #statusGraphic, #credits {
-			svg {
-				fill: $pre;
-			}
-		}
-		#statusGraphic svg {
-			bottom: 48px;
-		}
-		#startButton:hover, #main a:hover, #GitHubPrj:hover, .answer {
-			color: rgba($pre, 1.0);
-		}
-		button, .selected {
-			background-color: $pre;
-		}
-	}
+}
+
+i {
+	font-style: italic;
+}
+
+.de {
+	color: $de;
+	font-weight: 700;
+	text-shadow: 0 2px 4px rgba($de, .3);
+}
+
+.meh {
+	color: $meh;
+	font-weight: 700;
+	text-shadow: 0 2px 4px rgba($meh, .3);
+}
+
+.pre {
+	color: $pre;
+	font-weight: 700;
+	text-shadow: 0 2px 4px rgba($pre, .3);
 }
 
 svg {
@@ -149,19 +136,13 @@ header {
 		align-items: center;
 		font-size: 75%;
 		font-weight: 900;
-		letter-spacing: .2em;
+		letter-spacing: .1em;
 		text-transform: uppercase;
 		width: 182	px;
 		a {
 			display: inline-block;
 			text-align: center;
 			width: 100px;
-			color: black;
-			-webkit-transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
-			transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
-			&:hover {
-				letter-spacing: .33em;
-			}
 		}
 	}
 }
@@ -180,6 +161,9 @@ header {
 	.content {
 		display: -webkit-box;
 		display: flex;
+		-webkit-box-orient: vertical;
+		-webkit-box-direction: normal;
+		flex-direction: column;
 		position: relative;
 		left: 0%;
 		-webkit-box-pack: center;
@@ -188,15 +172,30 @@ header {
 		align-items: center;
 		min-width: 100vw;
 		height: 100%;
+		box-sizing: border-box;
+		&#startScreen {
+			line-height: 30px;
+			text-align: center;
+			padding: 50px;
+			p, i {
+				max-width: 720px;
+				margin: 20px 0;
+			}
+			button {
+				margin: 12px 0;
+			}
+		}
 		.card {
 			position: relative;
-			background-color: $w;
+			//background-color: $w;
 			border-radius: 22px;
 			padding: 13px;
 			max-width: 720px;
 			margin: 25px;
+			-webkit-transition: box-shadow .3s;
+			transition: box-shadow .3s;
 			p {
-				margin-bottom: 24px;
+				margin: 12px 0;
 			}
 			.qCount {
 				font-family: monospace;
@@ -216,7 +215,7 @@ button {
 	border-radius: 10px;
 	font-weight: 600;
 	cursor: pointer;
-	padding: 8px 0 8px 2px;
+	padding: 8px 18px 8px 20px;
 }
 
 .select {
@@ -250,21 +249,22 @@ button {
 				top: 0px;
 			}
 			&.botAns {
-				top: calc(-2 * #{$ansH});
+				top: (-2*$ansH);
 			}
 		}
 	}
 	.blank {
 		color: rgba(0,0,0,0);
 		line-height: 18px;
+		z-index: -1;
 	}
 	&.open {
-		height: calc(3 * #{$ansH} - 8px);
+		height: (3*$ansH - 8px);
 		.answer, .blank {
 			top: 0px !important;
 		}
 		.blank {
-			height: calc(#{$ansH} - 8px);
+			height: ($ansH - 8px);
 		}
 	}
 	&.open.selectionMade {
@@ -304,12 +304,12 @@ button {
 footer {
 	font-size: 60%;
 	font-weight: 600;
-	color: #0000;
 	text-align: center;
-	a {
-		-webkit-transition: color .3s, box-shadow .3s ease, bottom .3s ease;
-		transition: color .3s, box-shadow .3s ease, bottom .3s ease;
-	}
+	box-sizing: border-box;
+	border-bottom: 5px solid $b;
+	color: #0000;
+	-webkit-transition: border-bottom-color .3s;
+	transition: border-bottom-color .3s;
 	#credits {
 		display: -webkit-box;
 		display: flex;
@@ -356,7 +356,69 @@ footer {
 	}
 }
 
+// switches colors for dynamic items
+
+$types: (
+	"de": $de,
+	"meh": $meh,
+	"pre": $pre,
+);
+
+$sD: 6px;
+
+@each $type, $col in $types {
+	$cardOutShad: $sD $sD (2*$sD) (-$sD) rgba($col, .5);
+	$cardOutHlgh: (-$sD) (-$sD) (2*$sD) (-$sD) $w;
+	$cardInnShad: (-$sD/2) (-$sD/2) ($sD) (-$sD) rgba($col, .5) inset;
+	$cardInnHlgh: ($sD/2) ($sD/2) ($sD) (-$sD) $w inset;
+	$cardShad: $cardOutShad, $cardOutHlgh, $cardInnShad, $cardInnHlgh;
+	body.status-#{$type} {
+		#sitelogo, #statusGraphic, #credits {
+			svg {
+				fill: $col;
+			}
+		}
+		#statusGraphic svg {
+			@if $col == $pre {
+				bottom: 48px;
+			} @else if $col == $meh {
+				bottom: 24px;
+			} @else {
+				bottom: 0px;
+			}
+		}
+		#startButton:hover, a:hover, #GitHubPrj:hover, .answer {
+			color: rgba($col, 1.0);
+			text-shadow: 0 2px 4px rgba($col, .3);
+		}
+		button, .selected {
+			background-color: $col;
+		}
+		footer {
+			border-bottom-color: $col;
+		}
+		.card {
+			box-shadow: $cardShad;
+		}
+		.select {
+			&.open.selectionMade {
+				.blank:hover {
+					color: $col;
+				}
+			}
+		}
+	}
+}
+
 @media only screen and (max-width: 650px) {
+	p {
+		font-size: 20px;
+		line-height: 27px;
+	}
+	i {
+		font-size: 18px;
+		line-height: 22px;
+	}
 	header, footer {
 		-webkit-box-pack: center;
 		justify-content: center;

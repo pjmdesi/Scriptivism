@@ -1,26 +1,91 @@
 
+
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[ Variable Initialization ]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
 let touch = false;
+let currentLoc = '';
+
+const lsVersion = 0.1;
+
+
 function detectTouch() {
 	$('body').on('touchstart', function() {
 		touch = true;
 		$('.content .card .select').touch();
 		$('.content .card .select .answer').touch();
 		$('.content .card .select .blank').touch();
-		console.log('touch device');
 	});
 	return touch;
 }
 
+let getQs = $.getJSON( "js/questions.json", function() {})
+	.done(function() {
+		questList = JSON.parse(getQs.responseText).questions;
+		nextQ(false);
+	})
+	.fail( function(d, textStatus, error) {
+		console.error("getJSON for questions.json failed, status: " + textStatus + ", error: "+error)
+	})
+
+function storageSetup() {
+
+	// localStorage will contain a key Qprogress that stores stringified JSON data with the answers users have provided. This data will be used to determine the user's score, allow them to change their answers, and prevent questions from appearing more than once.
+
+	let ls = JSON.parse(localStorage.getItem('Qprogress'));
+
+	// Default localStorage setup for new users
+	let storSetup = { ver: 0.1, QIDs: [] };
+
+	// Checks if user has Qprogress item already
+	if (ls == null) {
+		// NEW USER
+
+		console.log('No previous data detected, setting up new user.');
+
+		// Initializes localStorage
+		localStorage.setItem('Qprogress',JSON.stringify(storSetup));
+
+		ls = storSetup;
+
+	} else {
+		// RETURNING USER
+
+		// Checks version of local storage
+		if (ls.ver == lsVersion) {
+			// Correct version of Qprogress detected
+
+			console.log('all is good');
+
+			return ls;
+
+			// Do stuff
+
+		} else {
+			// Qprogress out of date
+
+			// Update stuff
+			let newStor = ls;
+
+			// Finally, update ls version number
+			newStor.ver = lsVersion;
+
+			localStorage.setItem('Qprogress',JSON.stringify(newStor));
+
+			// Do stuff
+		}
+	}
+}
+
 function saveQ(q) {
-	console.log(q);
+
 }
 
 function openAns(q) {
 
 	let ans = q.find('.answer'),
 		blnk = q.find('.blank');
-
-		console.log('open');
 
 	if (touch) {
 		// when answer is tapped
@@ -68,75 +133,146 @@ function closeAns(q) {
 }
 
 // When select is tapped or hovered over
-$('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function(event) {
-	event.stopPropagation();
-	$(this).addClass('open');
-	openAns($(this));
-});
 
-$('.content .card .select').eq(0).on('mouseleave', function() {
-	closeAns($(this));
-});
+function usrInteraction() {
+
+	$('.content a').click(function(e) {
+		let href = $(this).attr('href');
+
+		// Stops normal link functionality
+		e.preventDefault();
+		changePage(href);
+	});
+
+	$('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function(event) {
+		event.stopPropagation();
+		$(this).addClass('open');
+		openAns($(this));
+	});
+
+	$('.content .card .select').eq(0).on('mouseleave', function() {
+		closeAns($(this));
+	});
+}
 
 function moveQs(callback) {
 	callback();
 }
 
 function nextQ(move=true) {
-	let cont = $('#main .content');
+	let ls = JSON.parse(localStorage.getItem('Qprogress'));
 
-	let curr = cont.eq(0),
-		next = cont.eq(1);
-
+	let randQ = Math.floor((Math.random()*Object.keys(questList).length)+1);
 	// load json and prep vars for next card
 
-	let nextCard = '<div class="card"><p class="qCount">q1</p><p>I<div class="select"><div class="answer"></div><div class="answer"></div><div class="answer"></div></div>gotten over it.</p><button class="qBnt" onclick="nextQ()">Next</button></div>';
+	if ($.inArray(randQ, ls.QIDs) !== -1) {
+		if (ls.QIDs.length == Object.keys(questList).length) {
+			changePage('score');
+		} else {
+			nextQ();
+		}
+	} else {
+		console.log(ls);
 
-	let nextNext = next.clone().html(nextCard);
+		let cont = $('#main .content').eq(0);
 
-	next.after(nextNext);
+		let cardInfo = {
+			qCount: ls.QIDs.length,
+			qText1: questList['q'+randQ].text1,
+			qText2: questList['q'+randQ].text2,
+			qAnsTop: questList['q'+randQ].options['pre'],
+			qAnsBot: questList['q'+randQ].options['de']
+		};
 
-	console.log('next');
-	if (move) {
-		moveQs(function() {
-			let cont = $('#main .content');
+		let nextCard = '<div class="content"><div class="card"><p class="qCount">q'+cardInfo.qCount+
+		'</p><span>'+cardInfo.qText1+
+		' </span><div class="select"><div class="answer topAns">'+cardInfo.qAnsTop+
+		'</div><div class="blank">×</div><div class="answer botAns">'+cardInfo.qAnsBot+
+		'</div></div><span>'+cardInfo.qText2+
+		'</span><button class="qBnt" onclick="nextQ()">Next</button></div></div>';
 
-			let curr = cont.eq(0);
+		cont.after(nextCard);
 
-			cont.animate({left:'-100%'}, 500, 'easeInOutBack');
-			setTimeout(function () {
-				curr.remove();
-				cont.css('left', '0%');
-			}, 550);
-		});
+		if (move) {
+			moveQs(function() {
+				let cont = $('#main .content');
+				let curr = cont.eq(0);
+
+				cont.animate({left:'-100%'}, 500, 'easeInOutBack', function() {
+					curr.remove();
+					cont.css('left', '0%');
+					ls.QIDs.push(randQ);
+					localStorage.setItem('Qprogress',JSON.stringify(ls));
+					usrInteraction();
+				});
+			});
+		}
+
 	}
 }
 
-
 let changePage = (l) => {
 
-	//checks if link is external
-	if (l.indexOf('http')) {
-		l = l.split('/')[1]?l.split('/')[1]:l;
-		console.log(l);
-	} else {
+	let main = $('#main');
+
+	// Checks if link is external
+	// indexOf returns -1 if 'http' is not in string
+	if (l.indexOf('http') > (-1)) {
+
+		// Link is external -> Opens in new window
 		window.open(l, '_blank');
+
+	} else if (!main.hasClass(l)) {
+
+		let t = 500;
+
+		// Checks to see if user is already on the page
+		// Shows loader if necessary *******
+		// $('#loader').addClass('loading');
+
+		// Removes current content if it exists
+		ctn = main.find('.content').length > 0;
+
+		let sign = l=='home'?-1:1;
+
+		main.animate({top: -sign*200, opacity: 0}, ctn?t:0, 'easeInCubic', function(){
+			main.animate({top: sign*200}, 50, function() {
+				main.load(l + '.html', function(response, status) {
+					if (status == 'error') {
+						main.load('404.html');
+						main.addClass('class_name')
+					}
+					main.animate({top: 0, opacity: 1}, t, 'easeOutCubic');
+					main.removeClass();
+					main.addClass(l)
+					usrInteraction();
+				});
+			});
+		});
 	}
 }
 
 // things to run when DOM is ready
 $(document).ready(function() {
-	detectTouch()
+	$('a').click(function(e) {
+		let href = $(this).attr('href');
+
+		// Stops normal link functionality
+		e.preventDefault();
+		changePage(href);
+	});
+	detectTouch();
+	storageSetup();
+	changePage('home');
 })
 
-$('a').click(function(e) {
-	let href = $(this).attr('href');
+// Manages what links do on this website
 
-	e.preventDefault();
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ TEST SCRIPTS ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
-	changePage(href)
-});
-
+// Allows switching scriptivism state by clicking the indicator in the header
 $('#statusCont').click(function(event) {
 	let stat = $('body');
 	if (stat.hasClass('status-meh')) {
