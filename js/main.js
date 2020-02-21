@@ -1,5 +1,3 @@
-
-
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[ Variable Initialization ]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -7,8 +5,21 @@
 let touch = false;
 let currentLoc = '';
 
-const lsVersion = 0.1;
+const lsVersion = 0.2;
 
+let getQs = $.getJSON( "js/questions.json", function() {})
+	.done(function() {
+		questList = JSON.parse(getQs.responseText).questions;
+	})
+	.fail( function(d, textStatus, error) {
+		console.error("getJSON for questions.json failed, status: " + textStatus + ", error: "+error)
+	})
+
+
+
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ Functions ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
 function detectTouch() {
 	$('body').on('touchstart', function() {
@@ -20,14 +31,61 @@ function detectTouch() {
 	return touch;
 }
 
-let getQs = $.getJSON( "js/questions.json", function() {})
-	.done(function() {
-		questList = JSON.parse(getQs.responseText).questions;
-		nextQ(false);
+function setFanciness(int) {
+	let hoverables = int;
+
+    let delay = 0;
+
+    $(hoverables).mouseenter(function(){
+        $('#cursor').addClass('hover')
+        delay = 200;
+        setTimeout(function(){
+            delay = 0
+        }, 300)
+    }).mouseleave(function(){
+        $('#cursor').removeClass('hover')
+        $('#cursor').removeClass('mousedown')
+    })
+    $(hoverables).on('mousedown', function(){
+        $('#cursor').addClass('mousedown')
+        delay = 200;
+        setTimeout(function(){
+            delay = 0
+        }, 300)
+    }).on('mouseup',function(){
+        setTimeout(function(){
+            $('#cursor').removeClass('mousedown')
+        }, delay)
+    })
+
+	$(document).bind('mousemove', function(e){
+		let w, h, x, y, xd, yd, mbor;
+
+		w = $(window).width();
+		h = $(window).height();
+
+		x = e.pageX;
+		y = e.pageY;
+
+		xd = -(15 - 30*(x/w));
+		yd = 15 - 30*(y/h);
+
+		mbor = parseInt($('#cursor').css('border-width'), 10);
+
+		// $(".content").css({
+		// 	'-webkit-transform' : 'rotateX('+ yd +'deg) rotateY('+ xd +'deg)',
+		// 	'-moz-transform' : 'rotateX('+ yd +'deg) rotateY('+ xd +'deg)',
+		// 	'-ms-transform' : 'rotateX('+ yd +'deg) rotateY('+ xd +'deg)',
+		// 	'transform' : 'rotateX('+ yd +'deg) rotateY('+ xd +'deg)',
+		// 	'background-position-x' : -x
+		// });
+
+		$('#cursor').css({
+			'left' : x - mbor,
+			'top' : y - mbor
+		})
 	})
-	.fail( function(d, textStatus, error) {
-		console.error("getJSON for questions.json failed, status: " + textStatus + ", error: "+error)
-	})
+}
 
 function storageSetup() {
 
@@ -36,7 +94,7 @@ function storageSetup() {
 	let ls = JSON.parse(localStorage.getItem('Qprogress'));
 
 	// Default localStorage setup for new users
-	let storSetup = { ver: 0.1, QIDs: [] };
+	let storSetup = { ver: lsVersion, QIDs: [], ans: [] };
 
 	// Checks if user has Qprogress item already
 	if (ls == null) {
@@ -58,28 +116,16 @@ function storageSetup() {
 
 			console.log('all is good');
 
-			return ls;
-
-			// Do stuff
-
 		} else {
 			// Qprogress out of date
+			console.log('Data is old, updating to new format...');
 
 			// Update stuff
-			let newStor = ls;
-
-			// Finally, update ls version number
-			newStor.ver = lsVersion;
+			let newStor = storSetup;
 
 			localStorage.setItem('Qprogress',JSON.stringify(newStor));
-
-			// Do stuff
 		}
 	}
-}
-
-function saveQ(q) {
-
 }
 
 function openAns(q) {
@@ -153,63 +199,154 @@ function usrInteraction() {
 	$('.content .card .select').eq(0).on('mouseleave', function() {
 		closeAns($(this));
 	});
+
+	setFanciness($('button'));
 }
 
-function moveQs(callback) {
-	callback();
+function animateValue(id, start, end, duration) {
+    // assumes integer values for start and end
+
+    var obj = document.getElementById(id);
+    var range = end - start;
+    // no timer shorter than 50ms (not really visible any way)
+    var minTimer = 50;
+    // calc step time to show all interediate values
+    var stepTime = Math.abs(Math.floor(duration / range));
+
+    // never go below minTimer
+    stepTime = Math.max(stepTime, minTimer);
+
+    // get current time and calculate desired end time
+    var startTime = new Date().getTime();
+    var endTime = startTime + duration;
+    var timer;
+
+    function run() {
+        var now = new Date().getTime();
+        var remaining = Math.max((endTime - now) / duration, 0);
+        var value = Math.round(end - (remaining * range));
+        obj.innerHTML = value;
+        if (value == end) {
+            clearInterval(timer);
+        }
+    }
+
+    timer = setInterval(run, stepTime);
+    run();
 }
 
-function nextQ(move=true) {
+function scoreMeter() {
 	let ls = JSON.parse(localStorage.getItem('Qprogress'));
 
-	let randQ = Math.floor((Math.random()*Object.keys(questList).length)+1);
-	// load json and prep vars for next card
+	let pos = calcScore(ls),
+		t = 800;
 
+	setTimeout(function () {
+		$('#indicator')
+			.animate({'margin-left': pos*100+"%"}, t, 'easeInOutCubic')
+			.addClass('set');
+		animateValue('indicatorVal', $('#indicatorVal').text(), ls.QIDs.length, t);
+	}, 300);
+}
+
+$('.indicator').animate({});
+
+function calcScore(ls) {
+
+	let score = 0,
+		mehMargin = 0.2,
+		ansCount = ls.ans.length;
+
+	for (let i of ls.ans) {
+		score += i=='pre'?1:(-1);
+	}
+
+	// console.log(score/(ansCount+10));
+
+	$('body')
+		.removeClass()
+		.addClass(Math.abs(score/(ansCount+5))<0.1?'status-meh':(score>0?'status-pre':'status-de'));
+	return (score/(ansCount+5));
+}
+
+function nextQ(move=true,start=false) {
+
+	let ls = JSON.parse(localStorage.getItem('Qprogress'));
+
+	// Generate random integer to select from list of questions
+	let randQ = Math.floor((Math.random()*Object.keys(questList).length)+1);
+
+	// If randQ is already in users answered Qs
 	if ($.inArray(randQ, ls.QIDs) !== -1) {
+		// randQ IS in users Qs, see If ALL questions have been answered
 		if (ls.QIDs.length == Object.keys(questList).length) {
+			// All available questions have been answered, go to score page
 			changePage('score');
 		} else {
+			// Unanswered questions exists, try again with a new random number
 			nextQ();
 		}
 	} else {
-		console.log(ls);
-
+		// randQ IS NOT in users Qs, generate next card
 		let cont = $('#main .content').eq(0);
 
+		let lastQ = Object.keys(questList).length==ls.QIDs.length+1;
+
 		let cardInfo = {
-			qCount: ls.QIDs.length,
+			qID: questList['q'+randQ].ID,
+			qCount: lastQ?'Last Question':'Question '+(ls.QIDs.length+1),
 			qText1: questList['q'+randQ].text1,
 			qText2: questList['q'+randQ].text2,
 			qAnsTop: questList['q'+randQ].options['pre'],
 			qAnsBot: questList['q'+randQ].options['de']
 		};
 
-		let nextCard = '<div class="content"><div class="card"><p class="qCount">q'+cardInfo.qCount+
+		let nextCard = '<div class="content"><div class="card" id="q-'+cardInfo.qID+
+		'"><p class="qCount">'+cardInfo.qCount+
 		'</p><span>'+cardInfo.qText1+
 		' </span><div class="select"><div class="answer topAns">'+cardInfo.qAnsTop+
 		'</div><div class="blank">×</div><div class="answer botAns">'+cardInfo.qAnsBot+
-		'</div></div><span>'+cardInfo.qText2+
-		'</span><button class="qBnt" onclick="nextQ()">Next</button></div></div>';
+		'</div></div><span> '+cardInfo.qText2+
+		'</span><button class="qBnt" onclick="recordQ()">'+(lastQ?'See Your Score':'Next')+
+		'</button></div></div>';
 
 		cont.after(nextCard);
 
 		if (move) {
-			moveQs(function() {
-				let cont = $('#main .content');
-				let curr = cont.eq(0);
+			let conts = $('#main .content');
 
-				cont.animate({left:'-100%'}, 500, 'easeInOutBack', function() {
-					curr.remove();
-					cont.css('left', '0%');
-					ls.QIDs.push(randQ);
-					localStorage.setItem('Qprogress',JSON.stringify(ls));
-					usrInteraction();
-				});
-			});
+			conts.animate({left:'-100%'}, 500, 'easeInOutBack');
+
+			setTimeout(function () {
+				cont.remove();
+				conts.css('left', '0%');
+				usrInteraction();
+				console.log(ls);
+			}, 550);
 		}
-
 	}
 }
+
+function recordQ() {
+
+	// Get list of questions from questions.json
+	let ls = JSON.parse(localStorage.getItem('Qprogress'));
+
+	let ans = $('.selected');
+
+	let q = ans.parents('.card').attr('id'),
+		ansSel = ans.hasClass('topAns')?'pre':'de';
+
+	console.log(q,": ",ansSel);
+
+	ls.QIDs.push(parseInt(q.slice(2, q.length)));
+	ls.ans.push(ansSel);
+
+	localStorage.setItem('Qprogress',JSON.stringify(ls));
+
+	nextQ();
+	calcScore(ls);
+};
 
 let changePage = (l) => {
 
@@ -246,11 +383,18 @@ let changePage = (l) => {
 					main.removeClass();
 					main.addClass(l)
 					usrInteraction();
+					setFanciness();
 				});
 			});
 		});
 	}
 }
+
+
+
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ Listeners ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
 // things to run when DOM is ready
 $(document).ready(function() {
@@ -264,28 +408,13 @@ $(document).ready(function() {
 	detectTouch();
 	storageSetup();
 	changePage('home');
+	setFanciness($('a'));
 })
 
 // Manages what links do on this website
 
+
+
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ TEST SCRIPTS ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
-
-// Allows switching scriptivism state by clicking the indicator in the header
-$('#statusCont').click(function(event) {
-	let stat = $('body');
-	if (stat.hasClass('status-meh')) {
-		stat
-			.removeClass('status-meh')
-			.addClass('status-pre');
-	}	else if (stat.hasClass('status-pre')) {
-		stat
-			.removeClass('status-pre')
-			.addClass('status-de');
-	} else {
-		stat
-			.removeClass('status-de')
-			.addClass('status-meh');
-	}
-});

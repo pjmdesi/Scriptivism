@@ -1,3 +1,12 @@
 <div class="content">
-	<button type="button" name="button" onclick="localStorage.clear();storageSetup();">reset score</button>
+	<div id="scoreMeter">
+		<div class="bar deBar"></div>
+		<div class="bar mehBar"></div>
+		<div class="bar preBar"></div>
+		<div id="indicator"><p id="indicatorVal">0</p></div>
+		<script type="text/javascript">
+			scoreMeter();
+		</script>
+	</div>
+	<button type="button" name="button" onclick="localStorage.clear();storageSetup();scoreMeter();" style="width:auto;">reset score</button>
 </div>
