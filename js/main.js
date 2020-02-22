@@ -4,8 +4,6 @@
 //    • things look pretty small in the phones screen
 //    • tapping on answers isn't working well, might he related to cursor issue
 
-
-
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[ Variable Initialization ]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -35,7 +33,13 @@ function detectTouch() {
 		$('.content .card .select').touch();
 		$('.content .card .select .answer').touch();
 		$('.content .card .select .blank').touch();
+		$('#cursor').remove();
 	});
+	$('body').on('touchstart', function() {
+		touch = true;
+		$('header').after('<div id="cursor"></div>');
+	});
+	console.log('touch = '+touch);
 	return touch;
 }
 
@@ -138,37 +142,40 @@ function storageSetup() {
 
 function openAns(q) {
 
+	console.log('open');
+
 	let ans = q.find('.answer'),
 		blnk = q.find('.blank');
 
 	if (touch) {
-		// when answer is tapped
-		ans.on('tap', function() {
-			ans.removeClass('selected');
-			q.addClass('selectionMade');
-			$(this).addClass('selected');
-			closeAns(q)
-		});
+		setTimeout(function () {
+			ans
+				.on('touchstart', function() {
+					ans.removeClass('selected');
+					q.addClass('selectionMade');
+					$(this).addClass('selected');
+				})
+				.on('touchend', function() {
+					closeAns(q)
+				});
 
-		// when clear is tapped
-		blnk.on('tap', function() {
-			ans.removeClass('selected');
-			q.removeClass('selectionMade');
-		});
+			blnk.on('touchstart', function() {
+				ans.removeClass('selected');
+				q.removeClass('selectionMade');
+			});
+		}, 150);
+
 	} else {
-		// when answer is hovered over
-		ans.on('mouseenter', function() {
-			ans.removeClass('selected');
-			q.addClass('selectionMade');
-			$(this).addClass('selected');
-		});
+		ans
+			.on('mouseenter', function() {
+				ans.removeClass('selected');
+				q.addClass('selectionMade');
+				$(this).addClass('selected');
+			})
+			.on('click', function() {
+				closeAns(q)
+			});
 
-		// when answer is clicked
-		ans.on('click', function() {
-			closeAns(q)
-		});
-
-		// when clear is clicked
 		blnk.on('click', function() {
 			ans.removeClass('selected');
 			q.removeClass('selectionMade');
@@ -182,8 +189,8 @@ function closeAns(q) {
 		blnk = q.find('.blank');
 
 	q.removeClass('open');
-	ans.off('tap click mouseenter');
-	blnk.off('tap click')
+	ans.off();
+	blnk.off()
 }
 
 // When select is tapped or hovered over
@@ -198,17 +205,17 @@ function usrInteraction() {
 		changePage(href);
 	});
 
-	$('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function(event) {
+	$('.content .card .select').on(touch?'touchstart':'mouseenter', function(event) {
 		event.stopPropagation();
 		$(this).addClass('open');
 		openAns($(this));
 	});
 
-	$('.content .card .select').eq(0).on('mouseleave', function() {
+	$('.content .card .select').on('mouseleave', function() {
 		closeAns($(this));
 	});
 
-	setFanciness($('button'));
+	touch?'':setFanciness($('button'));
 }
 
 function animateValue(id, start, end, duration) {
@@ -256,8 +263,6 @@ function scoreMeter() {
 		animateValue('indicatorVal', $('#indicatorVal').text(), ls.QIDs.length, t);
 	}, 300);
 }
-
-$('.indicator').animate({});
 
 function calcScore(ls) {
 
