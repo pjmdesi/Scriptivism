@@ -1,3 +1,11 @@
+// Bugs:
+//    • remove cursor from phone screen
+//    • can't see full text of HomePage on phone in landscape
+//    • things look pretty small in the phones screen
+//    • tapping on answers isn't working well, might he related to cursor issue
+
+
+
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[ Variable Initialization ]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
