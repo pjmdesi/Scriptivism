@@ -373,9 +373,9 @@ function nextQ(move=true,start=false) {
 		let nextCard = '<div class="content"><div class="card" id="q-'+cardInfo.qID+
 		'"><p class="qCount">'+cardInfo.qCount+
 		'</p><span>'+cardInfo.qText1+
-		' </span><div class="select"><div class="answer topAns">'+cardInfo.qAnsTop+
+		'</span><div class="select"><div class="answer topAns">'+cardInfo.qAnsTop+
 		'</div><div class="blank">×</div><div class="answer botAns">'+cardInfo.qAnsBot+
-		'</div></div><span> '+cardInfo.qText2+
+		'</div></div><span>'+cardInfo.qText2+
 		'</span><button class="qBnt" onclick="recordQ()">'+(lastQ?'See Your Score':'Next')+
 		'</button></div></div>';
 
