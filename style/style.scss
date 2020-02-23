@@ -544,7 +544,13 @@ $cD: 3px;
 }
 
 @media only screen and (max-height: 700px) {
-	#main .content {
+	#main #startScreen {
 		padding-top: calc(700px - 100vh);
+	}
+}
+
+@media only screen and (max-height: 450px) {
+	#main #startScreen {
+		padding-top: calc(400px - 50vh);
 	}
 }

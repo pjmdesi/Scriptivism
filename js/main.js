@@ -53,6 +53,13 @@ $(document).ready(function() {
 function applyTouch() {
 	$('#cursor').remove();
 	$(document).unbind();
+
+	$('.content').css({
+		'-webkit-transform': 'rotateX('+ 0 +'deg) rotateY('+0 +'deg)',
+		'-moz-transform': 'rotateX('+ 0 +'deg) rotateY('+0 +'deg)',
+		'-ms-transform': 'rotateX('+ 0 +'deg) rotateY('+0 +'deg)',
+		'transform': 'rotateX('+ 0 +'deg) rotateY('+0 +'deg)'
+	});
 	// console.log('touch device detected');
 }
 
@@ -124,7 +131,7 @@ function setFanciness(int) {
 		let shadCol = $('body').hasClass('status-meh')?'rgba(82, 0, 210, 0.15)':($('body').hasClass('status-de')?'rgba(0, 183, 226, 0.15)':'rgba(255, 0, 98, 0.15)');
 
 
-		let bodyShad = String((-8*yd+'px '+8*xd+'px 180px -60px '+shadCol+' inset'))
+		let bodyShad = String((-10*yd+'px '+10*xd+'px 180px -60px '+shadCol+' inset'))
 
 		// console.log('y: '+String(yd).slice(0,4)+' | x: '+String(xd).slice(0,4));
 
