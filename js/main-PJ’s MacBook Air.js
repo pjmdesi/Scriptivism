@@ -4,6 +4,8 @@
 //    • things look pretty small in the phones screen
 //    • tapping on answers isn't working well, might he related to cursor issue
 
+
+
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[ Variable Initialization ]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -22,83 +24,48 @@ let getQs = $.getJSON( "js/questions.json", function() {})
 	})
 
 
-// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
-// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ Listeners ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
-// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
-
-// things to run when DOM is ready
-$(document).ready(function() {
-	$('a').click(function(e) {
-		let href = $(this).attr('href');
-
-		// Stops normal link functionality
-		e.preventDefault();
-		changePage(href);
-	});
-	detectTouch(function() {
-		$('html').off();
-		// console.log('off');
-	});
-	storageSetup();
-	changePage('home');
-	setFanciness($('a'));
-})
-
-
 
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ Functions ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
-function applyTouch() {
-	$('#cursor').remove();
-	$(document).unbind();
-	// console.log('touch device detected');
-}
-
-function detectTouch(callback) {
-	// console.log('detect touch');
-	$('html').on('touchstart', function() {
-		// console.log('touch');
+function detectTouch() {
+	$('body').on('touchstart', function() {
 		touch = true;
-		applyTouch();
-		callback();
+		$('.content .card .select').touch();
+		$('.content .card .select .answer').touch();
+		$('.content .card .select .blank').touch();
 	});
-	$('html').on('click', function() {
-		// console.log('click');
-		touch = false;
-		callback();
-	});
-
-
+	$('#cursor').hide();
 	return touch;
 }
 
 function setFanciness(int) {
+
+	if (!touch) {
 	let hoverables = int;
 
-    let delay = 0,
-		c = $('#cursor');
+    let delay = 0;
 
     $(hoverables).mouseenter(function(){
-        c.addClass('hover')
+        $('#cursor').addClass('hover')
         delay = 200;
         setTimeout(function(){
             delay = 0
         }, 300)
     }).mouseleave(function(){
-        c.removeClass('hover')
-        c.removeClass('mousedown')
+        $('#cursor').removeClass('hover')
+        $('#cursor').removeClass('mousedown')
     })
     $(hoverables).on('mousedown', function(){
-        c.addClass('mousedown')
+        $('#cursor').addClass('mousedown')
         delay = 200;
         setTimeout(function(){
             delay = 0
         }, 300)
     }).on('mouseup',function(){
         setTimeout(function(){
-            c.removeClass('mousedown')
+            $('#cursor').removeClass('mousedown')
         }, delay)
     })
 
@@ -111,41 +78,25 @@ function setFanciness(int) {
 		x = e.pageX;
 		y = e.pageY;
 
-
-
-		// $('#')
-
-		yd = -(15 - 30*(x/w));
-		xd = 15 - 30*(y/h);
-
-		let maxY = 12;
-		let calcY = (Math.abs(yd)/yd)*(Math.min(Math.abs(yd)**(1/2),maxY));
-
-		let shadCol = $('body').hasClass('status-meh')?'rgba(82, 0, 210, 0.15)':($('body').hasClass('status-de')?'rgba(0, 183, 226, 0.15)':'rgba(255, 0, 98, 0.15)');
-
-
-		let bodyShad = String((-8*yd+'px '+8*xd+'px 180px -60px '+shadCol+' inset'))
-
-		// console.log('y: '+String(yd).slice(0,4)+' | x: '+String(xd).slice(0,4));
+		xd = -(15 - 30*(x/w));
+		yd = 15 - 30*(y/h);
 
 		mbor = parseInt($('#cursor').css('border-width'), 10);
 
-		$('.content').css({
-			'-webkit-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-			'-moz-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-			'-ms-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-			'transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)'
-		});
-
-		$('body').css({
-			'box-shadow': bodyShad
-		});
+		// $(".content").css({
+		// 	'-webkit-transform' : 'rotateX('+ yd +'deg) rotateY('+ xd +'deg)',
+		// 	'-moz-transform' : 'rotateX('+ yd +'deg) rotateY('+ xd +'deg)',
+		// 	'-ms-transform' : 'rotateX('+ yd +'deg) rotateY('+ xd +'deg)',
+		// 	'transform' : 'rotateX('+ yd +'deg) rotateY('+ xd +'deg)',
+		// 	'background-position-x' : -x
+		// });
 
 		$('#cursor').css({
 			'left' : x - mbor,
 			'top' : y - mbor
 		})
 	})
+}
 }
 
 function storageSetup() {
@@ -161,7 +112,7 @@ function storageSetup() {
 	if (ls == null) {
 		// NEW USER
 
-		// console.log('No previous data detected, setting up new user.');
+		console.log('No previous data detected, setting up new user.');
 
 		// Initializes localStorage
 		localStorage.setItem('Qprogress',JSON.stringify(storSetup));
@@ -175,11 +126,11 @@ function storageSetup() {
 		if (ls.ver == lsVersion) {
 			// Correct version of Qprogress detected
 
-			// console.log('all is good');
+			console.log('all is good');
 
 		} else {
 			// Qprogress out of date
-			// console.log('Data is old, updating to new format...');
+			console.log('Data is old, updating to new format...');
 
 			// Update stuff
 			let newStor = storSetup;
@@ -191,40 +142,37 @@ function storageSetup() {
 
 function openAns(q) {
 
-	// console.log('open');
-
 	let ans = q.find('.answer'),
 		blnk = q.find('.blank');
 
 	if (touch) {
-		setTimeout(function () {
-			ans
-				.on('touchstart', function() {
-					ans.removeClass('selected');
-					q.addClass('selectionMade');
-					$(this).addClass('selected');
-				})
-				.on('touchend', function() {
-					closeAns(q)
-				});
+		// when answer is tapped
+		ans.on('tap', function() {
+			ans.removeClass('selected');
+			q.addClass('selectionMade');
+			$(this).addClass('selected');
+			closeAns(q)
+		});
 
-			blnk.on('touchstart', function() {
-				ans.removeClass('selected');
-				q.removeClass('selectionMade');
-			});
-		}, 150);
-
+		// when clear is tapped
+		blnk.on('tap', function() {
+			ans.removeClass('selected');
+			q.removeClass('selectionMade');
+		});
 	} else {
-		ans
-			.on('mouseenter', function() {
-				ans.removeClass('selected');
-				q.addClass('selectionMade');
-				$(this).addClass('selected');
-			})
-			.on('click', function() {
-				closeAns(q)
-			});
+		// when answer is hovered over
+		ans.on('mouseenter', function() {
+			ans.removeClass('selected');
+			q.addClass('selectionMade');
+			$(this).addClass('selected');
+		});
 
+		// when answer is clicked
+		ans.on('click', function() {
+			closeAns(q)
+		});
+
+		// when clear is clicked
 		blnk.on('click', function() {
 			ans.removeClass('selected');
 			q.removeClass('selectionMade');
@@ -238,8 +186,8 @@ function closeAns(q) {
 		blnk = q.find('.blank');
 
 	q.removeClass('open');
-	ans.off();
-	blnk.off()
+	ans.off('tap click mouseenter');
+	blnk.off('tap click')
 }
 
 // When select is tapped or hovered over
@@ -254,17 +202,17 @@ function usrInteraction() {
 		changePage(href);
 	});
 
-	$('.content .card .select').on(touch?'touchstart':'mouseenter', function(event) {
+	$('.content .card .select').eq(0).on(touch?'tap':'mouseenter', function(event) {
 		event.stopPropagation();
 		$(this).addClass('open');
 		openAns($(this));
 	});
 
-	$('.content .card .select').on('mouseleave', function() {
+	$('.content .card .select').eq(0).on('mouseleave', function() {
 		closeAns($(this));
 	});
 
-	touch?'':setFanciness($('button'));
+	setFanciness($('button'));
 }
 
 function animateValue(id, start, end, duration) {
@@ -313,6 +261,8 @@ function scoreMeter() {
 	}, 300);
 }
 
+$('.indicator').animate({});
+
 function calcScore(ls) {
 
 	let score = 0,
@@ -323,7 +273,7 @@ function calcScore(ls) {
 		score += i=='pre'?1:(-1);
 	}
 
-	// // console.log(score/(ansCount+10));
+	// console.log(score/(ansCount+10));
 
 	$('body')
 		.removeClass()
@@ -383,7 +333,7 @@ function nextQ(move=true,start=false) {
 				cont.remove();
 				conts.css('left', '0%');
 				usrInteraction();
-				// console.log(ls);
+				console.log(ls);
 			}, 550);
 		}
 	}
@@ -399,7 +349,7 @@ function recordQ() {
 	let q = ans.parents('.card').attr('id'),
 		ansSel = ans.hasClass('topAns')?'pre':'de';
 
-	// console.log(q,": ",ansSel);
+	console.log(q,": ",ansSel);
 
 	ls.QIDs.push(parseInt(q.slice(2, q.length)));
 	ls.ans.push(ansSel);
@@ -451,6 +401,30 @@ let changePage = (l) => {
 		});
 	}
 }
+
+
+
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ Listeners ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+// [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
+
+// things to run when DOM is ready
+$(document).ready(function() {
+	$('a').click(function(e) {
+		let href = $(this).attr('href');
+
+		// Stops normal link functionality
+		e.preventDefault();
+		changePage(href);
+	});
+	detectTouch();
+	storageSetup();
+	setFanciness($('a'));
+	changePage('home');
+})
+
+// Manages what links do on this website
+
 
 
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]

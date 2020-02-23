@@ -16,33 +16,40 @@ body {
 	background-color: #eee;
 	height: 100vh;
 	width: 100vw;
+	box-shadow: 0 0 120px rgba($meh, .15) inset;
 	* {
 		cursor: none !important;
 	}
 }
 
+::-webkit-scrollbar {
+	display: none;
+}
+
 #cursor {
-    pointer-events: none;
-    width: 16px;
-    height: 16px;
+	$bounce: cubic-bezier(0.4, 0, 0.5, 1.75);
+	pointer-events: none;
+	width: 16px;
+	height: 16px;
 	margin: -8px;
-    position: fixed;
-    box-sizing: content-box;
-    background: transparent;
-    border: 3px solid $meh;
-    border-radius: 50%;
-    box-shadow: 0 1px 10px rgba(20,17,50,0.4);
-    transform: scale (1);
+	position: fixed;
+	box-sizing: content-box;
+	background: transparent;
+	border: 3px solid $meh;
+	border-radius: 50%;
+	transform: scale (1);
 	z-index: 999;
-    transition: border-width .2s, transform .2s ease;
-    &.hover {
-        transform: scale(2.5);
-		border-width: 1.2px;
-    }
-    &.mousedown {
-        transform: scale(2);
-		border-width: 1.5px;
-    }
+	transition: width .2s $bounce, height .2s $bounce, margin .2s $bounce;
+	&.hover {
+		width: 48px;
+		height: 48px;
+		margin: -24px;
+	}
+	&.mousedown {
+		width: 32px;
+		height: 32px;
+		margin: -16px;
+	}
 }
 
 a {
@@ -162,6 +169,7 @@ header {
 	justify-content: flex-start;
 	overflow: hidden;
 	width: 100vw;
+	perspective: 500px;
 	.content {
 		display: flex;
 		flex-direction: column;
@@ -173,6 +181,7 @@ header {
 		height: 100%;
 		box-sizing: border-box;
 		padding: 50px;
+		overflow-y: scroll;
 		&#startScreen {
 			line-height: 30px;
 			text-align: center;
@@ -288,6 +297,7 @@ button {
 	font-weight: 900;
 	font-size: 48px;
 	color: $b;
+	width: auto;
 	background-color: transparent;
 }
 
@@ -430,6 +440,7 @@ $types: (
 );
 
 $sD: 6px;
+$cD: 3px;
 
 @each $type, $col in $types {
 	$cardOutShad: $sD $sD (2*$sD) (-$sD) rgba($col, .5);
@@ -437,6 +448,11 @@ $sD: 6px;
 	$cardInnShad: (-$sD/2) (-$sD/2) ($sD) (-$sD) rgba($col, .5) inset;
 	$cardInnHlgh: ($sD/2) ($sD/2) ($sD) (-$sD) $w inset;
 	$cardShad: $cardOutShad, $cardOutHlgh, $cardInnShad, $cardInnHlgh;
+	$curOutShad: $cD $cD (2*$cD) (-$cD) rgba($col, .5);
+	$curOutHlgh: (-$cD) (-$cD) (2*$cD) (-$cD) $w;
+	$curInnShad: (-$cD/2) (-$cD/2) ($cD) (-$cD) rgba($col, .5) inset;
+	$curInnHlgh: ($cD/2) ($cD/2) ($cD) (-$cD) $w inset;
+	$curShad: $curOutShad, $curOutHlgh, $curInnShad, $curInnHlgh;
 	body.status-#{$type} {
 		#sitelogo, #statusGraphic, #credits {
 			svg {
@@ -471,6 +487,9 @@ $sD: 6px;
 		.card {
 			box-shadow: $cardShad;
 		}
+		#cursor {
+			box-shadow: $curShad;
+		}
 		.select {
 			&.open.selectionMade {
 				.blank:hover {
@@ -490,6 +509,13 @@ $sD: 6px;
 		font-size: 18px;
 		line-height: 22px;
 	}
+	#main .content#startScreen {
+		i, p {
+			margin: 9px 0;
+			font-size: 18px;
+			line-height: 19px;
+		}
+	}
 	header, footer {
 		justify-content: center;
 	}
@@ -503,11 +529,22 @@ $sD: 6px;
 	#main .content {
 		padding: 5vw;
 	}
+	#startButton {
+		font-size: 27px;
+		margin: 9px 0;
+		padding: 0px;
+	}
 	footer {
 		color: #0005;
 		>* {
 			width: 100%;
 			margin: 8px 0 !important;
 		}
+	}
+}
+
+@media only screen and (max-height: 700px) {
+	#main .content {
+		padding-top: calc(700px - 100vh);
 	}
 }
