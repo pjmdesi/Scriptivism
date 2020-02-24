@@ -28,6 +28,8 @@ body {
 
 #cursor {
 	$bounce: cubic-bezier(0.4, 0, 0.5, 1.75);
+	-webkit-backdrop-filter: blur(0px);
+	backdrop-filter: blur(0px);
 	pointer-events: none;
 	width: 16px;
 	height: 16px;
@@ -37,9 +39,20 @@ body {
 	background: transparent;
 	border: 3px solid $meh;
 	border-radius: 50%;
-	transform: scale (1);
 	z-index: 999;
-	transition: width .2s $bounce, height .2s $bounce, margin .2s $bounce;
+	transition: width .2s $bounce, height .2s $bounce, margin .2s $bounce, border-color .2s, -webkit-backdrop-filter .2s, backdrop-filter .2s;
+	&:after {
+		content: '×';
+		font-size: 36px;
+		line-height: 64px;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		vertical-align: middle;
+		position: absolute;
+		color: transparent;
+		transition: color .17s, line-height .17s $bounce;
+	}
 	&.hover {
 		width: 48px;
 		height: 48px;
@@ -50,9 +63,21 @@ body {
 		height: 32px;
 		margin: -16px;
 	}
+	&.mouseRefuse {
+		-webkit-backdrop-filter: blur(5px);
+		backdrop-filter: blur(5px);
+		width: 44px;
+		height: 44px;
+		margin: -22px;
+		border-color: gray !important;
+		&:after {
+			color: gray;
+			line-height: 44px;
+		}
+	}
 }
 
-a {
+a, .textBtn {
 	font-weight: 700;
 	transition: bottom .3s ease, background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), box-shadow .3s ease;
 	&:hover {
@@ -60,7 +85,7 @@ a {
 	}
 	#menu &{
 		letter-spacing: .175em;
-		&:hover {
+		&:hover, &.active {
 			letter-spacing: .35em;
 		}
 	}
@@ -188,8 +213,14 @@ header {
 			p, i {
 				max-width: 720px;
 				margin: 20px 0;
+				.textBtn {
+					font-size: 24px;
+					background-color: transparent;
+					padding: 0;
+					margin: auto;
+				}
 			}
-			button {
+			button:not(.textBtn) {
 				margin: 12px 0;
 			}
 		}
@@ -272,7 +303,7 @@ header {
 	}
 }
 
-button {
+button:not(.textBtn) {
 	border-radius: 10px;
 	font-weight: 600;
 	cursor: pointer;
@@ -286,11 +317,6 @@ button {
 	&:hover {
 		letter-spacing: .4em;
 	}
-}
-
-.select:not(.selectionMade)~button {
-	pointer-events: none;
-	background-color: lightgray;
 }
 
 #startButton {
@@ -379,6 +405,12 @@ button {
 	}
 }
 
+
+.select:not(.selectionMade)~button, .score button.inactive {
+	pointer-events: none;
+	background-color: lightgray;
+}
+
 footer {
 	font-size: 60%;
 	font-weight: 600;
@@ -454,7 +486,7 @@ $cD: 3px;
 	$curInnHlgh: ($cD/2) ($cD/2) ($cD) (-$cD) $w inset;
 	$curShad: $curOutShad, $curOutHlgh, $curInnShad, $curInnHlgh;
 	body.status-#{$type} {
-		#sitelogo, #statusGraphic, #credits {
+		#sitelogo.active, #sitelogo:hover, #statusGraphic, #credits {
 			svg {
 				fill: $col;
 			}
@@ -468,7 +500,7 @@ $cD: 3px;
 				bottom: 0px;
 			}
 		}
-		#startButton:hover, a:hover, #GitHubPrj:hover, .answer, #scoreMeter>#indicator.set>#indicatorVal {
+		#startButton:hover, a:hover, a.active, #GitHubPrj:hover, .answer, #scoreMeter>#indicator.set>#indicatorVal, .textBtn:hover {
 			color: rgba($col, 1.0);
 			text-shadow: 0 2px 4px rgba($col, .3);
 		}
@@ -514,6 +546,10 @@ $cD: 3px;
 			margin: 9px 0;
 			font-size: 18px;
 			line-height: 19px;
+			.textBtn {
+				font-size: 18px;
+				line-height: 19px;
+			}
 		}
 	}
 	header, footer {

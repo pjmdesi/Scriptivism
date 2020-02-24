@@ -4,7 +4,7 @@
 			"ID": "1",
 			"name": "Anyway",
 			"text1": "",
-			"options": {
+			"option1": {
 				"pre": "Anyway",
 				"de": "Anyways"
 			},
@@ -14,17 +14,17 @@
 			"ID": "2",
 			"name": "Regardless",
 			"text1": "It is something i always wanted to do ",
-			"options": {
+			"option1": {
 				"pre": "regardless",
 				"de": "irregardless"
 			},
-			"text2": "of the danger."
+			"text2": " of the danger."
 		},
 		"q3": {
 			"ID": "3",
 			"name": "Couldn't care less",
 			"text1": "question3",
-			"options": {
+			"option1": {
 				"pre": "couldn't",
 				"de": "could"
 			},
@@ -34,7 +34,7 @@
 			"ID": "4",
 			"name": "Supposedly",
 			"text1": "question4",
-			"options": {
+			"option1": {
 				"pre": "supposedly",
 				"de": "supposably"
 			},
@@ -44,7 +44,7 @@
 			"ID": "5",
 			"name": "Could have",
 			"text1": "question5",
-			"options": {
+			"option1": {
 				"pre": "could have",
 				"de": "could of"
 			},
@@ -54,7 +54,7 @@
 			"ID": "6",
 			"name": "Enormous",
 			"text1": "question6",
-			"options": {
+			"option1": {
 				"pre": "enormous",
 				"de": "ginormous"
 			},
@@ -62,29 +62,34 @@
 		},
 		"q7": {
 			"ID": "7",
-			"name": "",
+			"name": "Literaly",
 			"text1": "question7",
-			"options": {
-				"pre": "choice1",
-				"de": "choice2"
+			"option1": {
+				"pre": "literally",
+				"de": "figuratively"
 			},
 			"text2": "zeta."
 		},
 		"q8": {
 			"ID": "8",
-			"name": "",
-			"text1": "question8",
-			"options": {
-				"pre": "choice1",
-				"de": "choice2"
+			"name": "Clown Murder",
+			"text1": "",
+			"option1": {
+				"pre": "By whom",
+				"de": "Who"
 			},
-			"text2": "eta."
+			"text2": " was the clown murdered ",
+			"option2": {
+				"pre": "",
+				"de": "by"
+			},
+			"text3": "?"
 		},
 		"q9": {
 			"ID": "9",
 			"name": "",
 			"text1": "question9",
-			"options": {
+			"option1": {
 				"pre": "choice1",
 				"de": "choice2"
 			},
@@ -94,7 +99,7 @@
 			"ID": "10",
 			"name": "",
 			"text1": "question10",
-			"options": {
+			"option1": {
 				"pre": "choice1",
 				"de": "choice2"
 			},
@@ -104,7 +109,7 @@
 			"ID": "11",
 			"name": "",
 			"text1": "question11",
-			"options": {
+			"option1": {
 				"pre": "choice1",
 				"de": "choice2"
 			},
@@ -114,7 +119,7 @@
 			"ID": "12",
 			"name": "",
 			"text1": "question12",
-			"options": {
+			"option1": {
 				"pre": "choice1",
 				"de": "choice2"
 			},
