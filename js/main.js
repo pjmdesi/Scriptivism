@@ -116,6 +116,7 @@ function setFanciness(int) {
 	// Sets various listeners for when cursor interacts with something
 	$(hoverables)
 		.on('mouseenter', function(e){
+			$(this).attr('href').indexOf('http')>=0?c.addClass('link'):'';
 			c.addClass('hover')
 			delay = 200;
 			setTimeout(function(){
@@ -123,7 +124,7 @@ function setFanciness(int) {
 			}, 300)
 		})
 		.on('mouseleave', function(e){
-			c.removeClass('hover mousedown mouseRefuse');
+			c.removeClass('hover link mousedown mouseRefuse');
 		})
 		.on('mousedown', function(e){
 			($(e.target).hasClass('active')||$(e.target).parents('a').hasClass('active'))?c.addClass('mouseRefuse'):c.addClass('mousedown');
@@ -136,7 +137,7 @@ function setFanciness(int) {
 			setTimeout(function(){
 				c.removeClass('mousedown mouseRefuse')
 			}, delay)
-		})
+		});
 
 	// Listens for mouse movement and moves the custom cursor to the pointer position
 	$(document).bind('mousemove', function(e){
@@ -260,14 +261,61 @@ function openAns(q) {
 		}, 150);
 	} else {
 		// Sets listeners when touch is false
+		$('#cursor').addClass('hidden');
+
 		ans
 			.on('mouseenter', function() {
 				ans.removeClass('selected');
 				q.addClass('selectionMade');
 				$(this).addClass('selected');
+				$(this).on('mousemove', function(e) {
+					let s = $('.select'),
+						a = $(this);
+
+					let x = e.pageX,
+						y = e.pageY,
+						ex = s.offset().left,
+						ey = s.offset().top,
+						ew = s.outerWidth(),
+						eh = 32,
+						diff = a.hasClass('topAns')?0:64;
+
+
+					let cx = ex+(ew/2),
+						cy = ey+diff+(eh/2);
+
+
+					let calcX = (Math.abs(x-cx)/(x-cx))*(Math.abs(x-cx)**(1/2)),
+						calcY = (Math.abs(y-cy)/(y-cy))*(Math.abs(y-cy)**(1/2));
+
+					// console.log(ex,ey,calcX.toFixed(3),calcY.toFixed(3));
+					a.css({
+						'-webkit-transform': 'translate('+calcX+'px,'+calcY+'px)',
+						'-moz-transform': 'translate('+calcX+'px,'+calcY+'px)',
+						'-ms-transform': 'translate('+calcX+'px,'+calcY+'px)',
+						'transform': 'translate('+calcX+'px,'+calcY+'px)'
+					});
+				});
+			})
+			.on('mouseleave', function(e) {
+				$(this)
+					.css({
+						'-webkit-transform': 'translate(0px,0px)',
+						'-moz-transform': 'translate(0px,0px)',
+						'-ms-transform': 'translate(0px,0px)',
+						'transform': 'translate(0px,0px)'
+					})
+					.off('mousemove');
+
 			})
 			.on('click', function() {
 				closeAns(q)
+				$(this).css({
+					'-webkit-transform': 'translate(0px,0px)',
+					'-moz-transform': 'translate(0px,0px)',
+					'-ms-transform': 'translate(0px,0px)',
+					'transform': 'translate(0px,0px)'
+				});
 			});
 
 		blnk.on('click', function() {
@@ -284,8 +332,9 @@ function closeAns(q) {
 		blnk = q.find('.blank');
 
 	q.removeClass('open');
+	$('#cursor').removeClass('hidden');
 	ans.off();
-	blnk.off()
+	blnk.off();
 }
 
 // Sets interactivity listeners for elements inside .content elements
@@ -367,7 +416,7 @@ function calcScore(ls,callback=function(){}) {
 	// Sets status class on body element to apply relevant styling
 	$('body')
 		.removeClass()
-		.addClass(Math.abs(fin)<0.1?'status-meh':(score>0?'status-pre':'status-de'));
+		.addClass(Math.abs(fin)<0.2?'status-meh':(score>0?'status-pre':'status-de'));
 
 	ls.curScore = fin;
 
@@ -400,6 +449,8 @@ function scoreMeter() {
 
 	// Calculates anim time based on how many questions have been answered since last time seeing score
 	let t = Math.abs((pos-scoreMeterVal[0])*4000);
+
+	console.log(pos);
 
 	setTimeout(function () {
 		// Sets previous positon of indicator, then animates it and the value to the new position

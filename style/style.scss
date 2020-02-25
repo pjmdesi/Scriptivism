@@ -42,7 +42,7 @@ body {
 	z-index: 999;
 	transition: width .2s $bounce, height .2s $bounce, margin .2s $bounce, border-color .2s, -webkit-backdrop-filter .2s, backdrop-filter .2s;
 	&:after {
-		content: '×';
+		content: ' ';
 		font-size: 36px;
 		line-height: 64px;
 		width: 100%;
@@ -53,10 +53,21 @@ body {
 		color: transparent;
 		transition: color .17s, line-height .17s $bounce;
 	}
+	&.hidden {
+		border-width: 0px;
+		margin: 0px;
+		width: 0px;
+		height: 0px;
+	}
 	&.hover {
 		width: 48px;
 		height: 48px;
 		margin: -24px;
+		&.link:after {
+			content: '↗';
+			color: $meh;
+			line-height: 50px;
+		}
 	}
 	&.mousedown {
 		width: 32px;
@@ -69,9 +80,10 @@ body {
 		width: 44px;
 		height: 44px;
 		margin: -22px;
-		border-color: gray !important;
+		border-color: $b !important;
 		&:after {
-			color: gray;
+			content: '×';
+			color: $b;
 			line-height: 44px;
 		}
 	}
@@ -254,6 +266,7 @@ header {
 	display: inline-block;
 	position: relative;
 	vertical-align: middle;
+	margin: 4px 0;
 	height: $ansH;
 	top: -2px;
 	text-align: center;
@@ -262,16 +275,20 @@ header {
 	white-space: nowrap;
 	transition: height .3s ease, margin .3s ease, border .1s ease;
 	border-bottom: 3px solid $b;
+	overflow: visible;
 	.answer, .blank {
 		position: relative;
 		box-sizing: border-box;
 		top: -$ansH;
 		height: $ansH;
 		padding: 4px 8px;
-		transition: height .3s ease, background-color .3s, top .3s ease, color .3s;
+		transition: transform .17s ease, height .3s ease, background-color .3s, top .3s ease, color .3s, opacity .3s;
 		border-radius: 10px;
+		opacity: 0;
 		&.selected {
 			color: $w;
+			opacity: 1;
+			z-index: 4;
 			&.topAns {
 				top: 0px;
 			}
@@ -283,19 +300,29 @@ header {
 	.blank {
 		color: rgba(0,0,0,0);
 		line-height: 18px;
+		transform: scale(1);
 	}
 	&.open {
 		height: (3*$ansH - 8px);
 		.answer, .blank {
 			top: 0px !important;
+			z-index: 3;
+			opacity: 1;
+			&:hover {
+				transition: height .3s ease, background-color .3s, top .3s ease, color .3s, opacity .3s;
+			}
 		}
 		.blank {
 			height: ($ansH - 8px);
+			z-index: 2;
 		}
 	}
 	&.open.selectionMade {
 		.blank {
 			color: rgba(0,0,0,.4);
+			&:hover {
+				transform: scale(1.25);
+			}
 		}
 	}
 	&.open, &.selectionMade {
