@@ -1,9 +1,3 @@
-// Bugs:
-//    • remove cursor from phone screen
-//    • can't see full text of HomePage on phone in landscape
-//    • things look pretty small in the phones screen
-//    • tapping on answers isn't working well, might he related to cursor issue
-
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[ Variable Initialization ]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -34,9 +28,6 @@ $(document).ready(function() {
 	$('a').click(function(e) {
 		// Stops normal link functionality
 		e.preventDefault();
-
-		// Get link address
-
 		// Executes navigation
 		changePage($(this));
 	});
@@ -116,7 +107,7 @@ function setFanciness(int) {
 	// Sets various listeners for when cursor interacts with something
 	$(hoverables)
 		.on('mouseenter', function(e){
-			$(this).attr('href').indexOf('http')>=0?c.addClass('link'):'';
+			if ($(this).attr('href')) $(this).attr('href').indexOf('http')>=0?c.addClass('link'):'';
 			c.addClass('hover')
 			delay = 200;
 			setTimeout(function(){
@@ -269,8 +260,9 @@ function openAns(q) {
 				q.addClass('selectionMade');
 				$(this).addClass('selected');
 				$(this).on('mousemove', function(e) {
-					let s = $('.select'),
-						a = $(this);
+					let a = $(this);
+
+					let s = a.parents('.select');
 
 					let x = e.pageX,
 						y = e.pageY,
@@ -288,7 +280,10 @@ function openAns(q) {
 					let calcX = (Math.abs(x-cx)/(x-cx))*(Math.abs(x-cx)**(1/2)),
 						calcY = (Math.abs(y-cy)/(y-cy))*(Math.abs(y-cy)**(1/2));
 
-					// console.log(ex,ey,calcX.toFixed(3),calcY.toFixed(3));
+					// console.log(
+					// 	'mouse: '+x.toFixed(3)+' | '+y.toFixed(3)+'\n'+
+					// 	'elem: '+ex.toFixed(3)+' | '+ey.toFixed(3)+'\n'+
+					// 	'elemC: '+cx.toFixed(3)+' '+cy.toFixed(3));
 					a.css({
 						'-webkit-transform': 'translate('+calcX+'px,'+calcY+'px)',
 						'-moz-transform': 'translate('+calcX+'px,'+calcY+'px)',
@@ -450,7 +445,7 @@ function scoreMeter() {
 	// Calculates anim time based on how many questions have been answered since last time seeing score
 	let t = Math.abs((pos-scoreMeterVal[0])*4000);
 
-	console.log(pos);
+	// console.log(pos);
 
 	setTimeout(function () {
 		// Sets previous positon of indicator, then animates it and the value to the new position
@@ -617,6 +612,8 @@ let changePage = (lnk) => {
 	let main = $('#main');
 
 	l = lnk.attr('href');
+
+	// console.log(l);
 
 	// Checks if link is external
 	// indexOf returns -1 if 'http' is not in string
