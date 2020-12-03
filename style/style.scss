@@ -5,6 +5,10 @@ $de: #00B7E2;
 $meh: #5200D3;
 $pre: #FF0062;
 
+html {
+	cursor: none !important;
+}
+
 body {
 	display: flex;
 	flex-direction: column;
