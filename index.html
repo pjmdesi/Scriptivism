@@ -2,24 +2,20 @@
 <html lang="en" dir="ltr">
 	<head>
 		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<!-- <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86"> -->
 		<title>Scriptivism</title>
-		<link rel="stylesheet" href="/style/reset.css">
-		<link rel="stylesheet" href="/style/style.min.css">
-		<script>
-			var isIE = /*@cc_on!@*/false || !!document.documentMode;
-			if (isIE) {
-				console.log('IE detected');
-				setTimeout(function () {
-					var page = document.getElementsByTagName('html')[0];
-					page.innerHTML = '<div style="max-width:720px; text-align:justify;margin:auto;font-family:sans-serif;"><h1>Internet Explorer Detected!</h1><p>You are using a browser that is severely out-of-date, leaving you and your entire network open to vulnerabilities and cyber attacks. As a courtesy, we will not load this website to protect you from those possible dangers.</p><p>Please see <a href="https://techcommunity.microsoft.com/t5/Windows-IT-Pro-Blog/The-perils-of-using-Internet-Explorer-as-your-default-browser/ba-p/331732">this article from Microsoft</a> who explain why you should no logner use their Internet Explorer product.</p><p>Please be safe. Download one of these fine browsers now:</p><p><ul><li><a href="https://www.google.com/chrome/index.html">Google Chrome</a></li><li><a href="https://www.mozilla.org/en-US/firefox/new/">Mozilla Firefox</a></li><li><a href="https://www.microsoft.com/en-us/windows/microsoft-edge">Microsoft Edge</a></li></ul></p></div>';
-				}, 500);
-			}
-		</script>
+
+		<link rel="icon" type="image/svg+xml" href="favicon.svg">
+		<link rel="alternate icon" href="favicon.ico">
+
+		<link rel="stylesheet" href="style/reset.min.css">
+		<link rel="stylesheet" href="style/style.min.css">
+
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-		<script src="js/console.js"></script>
+		<script src="js/console.min.js"></script>
 	</head>
-	<body class="status-meh">
+	<body class="status-meh custCursOn">
 		<header>
 			<a draggable="false" id="sitelogo" href="home">
 				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 338 67">
@@ -47,14 +43,14 @@
 			</div>
 		</header>
 		<div id="cursor"></div>
-		<div id="main" class="" style="opacity:0;"></div>
+		<main id="main" class="" style="opacity:0;"></main>
 		<footer>
 			<a draggable="false" id="GitHubPrj" href="https://github.com/pjmdesi/Scriptivism">View Project on GitHub</a>
-			<a draggable="false" id="credits" href="https://pjm.desi">
+			<a draggable="false" id="credits" href="https://pjm.design">
 				<svg id="logoVector" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 300"><title>PJM Design Logo</title><path d="M75,0A75,75,0,0,0,0,75V205H50V75a25,25,0,0,1,50,0c0,.14,0,70.73,0,70.73A75,75,0,0,0,75,0Zm25,166.68V225a25,25,0,1,1-50,0H0a75,75,0,0,0,150,0V133.25A95.18,95.18,0,0,1,100,166.68Z"/></svg>
 			</a>
 			<div id="socialMedia">
-				<a draggable="false" id="twitter" href="https://twitter.com/pjmdesi">twitter</a>
+				<a draggable="false" id="twitter" href="https://twitter.com/pjm_design">twitter</a>
 				<a draggable="false" id="youtube" href="https://www.youtube.com/channel/UC14tmYWp_jcTvgRMEHpMhNg">YouTube</a>
 				<a draggable="false" id="github" href="https://github.com/pjmdesi">GitHub</a>
 				<a draggable="false" id="twitch" href="https://www.twitch.tv/tectix0">twitch</a>
@@ -62,6 +58,6 @@
 		</footer>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.touch/1.1.0/jquery.touch.min.js" charset="utf-8"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
-		<script src="js/main.js" charset="utf-8"></script>
+		<script src="js/main.min.js" charset="utf-8"></script>
 	</body>
 </html>

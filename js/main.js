@@ -3,6 +3,8 @@
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
 let touch = false,
+	mot = 1,
+	cur = 1,
 	currentLoc = '',
 	scoreMeterVal= [0,0];
 
@@ -38,8 +40,23 @@ $(document).ready(function() {
 		$('html').off();
 	});
 
+	// finds & sets motion prefs based on local storage. If no local storage, adds it.
+	!localStorage.getItem('motion')
+		? localStorage.setItem('motion', mot)
+		: mot = parseInt(localStorage.getItem('motion'));
+
+	!localStorage.getItem('cursor')
+		? localStorage.setItem('cursor', cur)
+		: cur = parseInt(localStorage.getItem('cursor'));
+
+	if (!cur || touch) {
+		$('body').removeClass('custCursOn');
+	}
+
 	// Detects if localstorage is setup & has correct version
 	storageSetup();
+
+	calcScore(JSON.parse(localStorage.getItem('Qprogress')));
 
 	// Loads the homepage
 	changePage($('#sitelogo'));
@@ -48,6 +65,40 @@ $(document).ready(function() {
 	setFanciness($('a'));
 })
 
+
+// toggles motion effects when button is clicked on about page
+$('main').on('click', '#motionToggle', () => {
+	if (mot) {
+		localStorage.setItem('motion',0);
+		mot = 0;
+		$('main, #cursor').css({
+			'-webkit-transform': 'none',
+			'-moz-transform': 'none',
+			'-ms-transform': 'none',
+			'transform': 'none'
+		});
+		$('body').css({'box-shadow': 'none'});
+		$('#motionToggle').html('Turn on motion effects');
+	} else {
+		localStorage.setItem('motion',1);
+		mot = 1;
+		$('#motionToggle').html('Turn off motion effects');
+	}
+});
+
+$('main').on('click', '#cursorToggle', () => {
+	if (cur) {
+		localStorage.setItem('cursor',0);
+		cur = 0;
+		$('body').removeClass('custCursOn');
+		$('#cursorToggle').html('Turn on custom cursor');
+	} else {
+		localStorage.setItem('cursor',1);
+		cur = 1;
+		$('body').addClass('custCursOn');
+		$('#cursorToggle').html('Turn off custom cursor');
+	}
+});
 
 
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -64,12 +115,16 @@ function applyTouch() {
 	$(document).unbind();
 
 	// Set content elements to remain motionless and resets their rotation to 0
-	$('.content').css({
-		'-webkit-transform': 'rotateX('+ 0 +'deg) rotateY('+0 +'deg)',
-		'-moz-transform': 'rotateX('+ 0 +'deg) rotateY('+0 +'deg)',
-		'-ms-transform': 'rotateX('+ 0 +'deg) rotateY('+0 +'deg)',
-		'transform': 'rotateX('+ 0 +'deg) rotateY('+0 +'deg)'
+	localStorage.setItem('motion',0);
+	mot = 0;
+	$('main').css({
+		'-webkit-transform': 'none',
+		'-moz-transform': 'none',
+		'-ms-transform': 'none',
+		'transform': 'none'
 	});
+
+	$('body').css({'box-shadow': 'none'});
 	// console.log('touch device detected');
 }
 
@@ -97,9 +152,25 @@ function detectTouch(callback) {
 	return touch;
 }
 
+$('main').on('mouseenter', 'input, textarea', () => {
+	$('#cursor').addClass('inputHover');
+});
+
+$('main').on('mouseleave', 'input, textarea', () => {
+	$('#cursor').removeClass('inputHover');
+	$('#cursor').removeClass('mousedown');
+});
+
+$('main').on('mousedown', 'input, textarea', () => {
+	$('#cursor').addClass('mousedown');
+});
+
+$('main').on('mouseup', 'input, textarea', () => {
+	$('#cursor').removeClass('mousedown');
+});
+
 // If on desktop, sets listeners & anaimtion for desktop cursor
-function setFanciness(int) {
-	let hoverables = int;
+function setFanciness(hoverables) {
 
 	let delay = 0,
 			c = $('#cursor');
@@ -151,17 +222,14 @@ function setFanciness(int) {
 		});
 
 		// calculates the pointer's distance from the center using the given measurements above.
-		// Units are normalized from 0 – 15.
+		// Units are normalized.
 		// ie when cursor is in middle, coordinates are (0,0)
 		// when cursor is fully top-left, coordinates are (15,15)
-		yd = -(15 - 30*(x/w));
-		xd = 15 - 30*(y/h);
-
-		// Sets maximum rotation for y rotation (to aid in readability)
-		let maxY = 12;
+		yd = -(12 - 24*(x/w));
+		xd = 8 - 16*(y/h);
 
 		// Calculates the easing for the y rotation (looks like square root curve)
-		let calcY = (Math.abs(yd)/yd)*(Math.min(Math.abs(yd)**(1/2),maxY));
+		let calcY = (Math.abs(yd)/yd)*(Math.abs(yd)**(1/2));
 
 		// determines the css properties for the shadow color for the body (based on score status)
 		let shadCol = $('body').hasClass('status-meh')?'rgba(82, 0, 210, 0.15)':($('body').hasClass('status-de')?'rgba(0, 183, 226, 0.15)':'rgba(255, 0, 98, 0.15)');
@@ -169,18 +237,19 @@ function setFanciness(int) {
 		// Concatonates the string for the box-shadow property of body
 		let bodyShad = String((-10*yd+'px '+10*xd+'px 180px -60px '+shadCol+' inset'));
 
-		// Sets rotation of .content elements
-		$('.content').css({
-			'-webkit-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-			'-moz-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-			'-ms-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-			'transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)'
-		});
-
-		// Sets the box-shadow of the body
-		$('body').css({
-			'box-shadow': bodyShad
-		});
+		// Sets rotation of main elements
+		if (mot) {
+			$('main, #cursor').css({
+				'-webkit-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
+				'-moz-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
+				'-ms-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
+				'transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)'
+			});
+			// Sets the box-shadow of the body
+			$('body').css({
+				'box-shadow': bodyShad
+			});
+		}
 	})
 }
 
@@ -232,6 +301,7 @@ function openAns(q) {
 	let ans = q.find('.answer'),
 		blnk = q.find('.blank');
 
+	q.addClass('open');
 	if (touch) {
 		// Sets listeners when touch is true
 		setTimeout(function () {
@@ -326,29 +396,122 @@ function closeAns(q) {
 	let ans = q.find('.answer'),
 		blnk = q.find('.blank');
 
+	if (q.find('.selected').length) {
+		q.addClass('selectionMade');
+		if ($('.card').find('.select').length === $('.card').find('.selectionMade').length) {
+			$('.qBtn').prop('disabled', false);
+		}
+	} else {
+		q.removeClass('selectionMade');
+		$('.qBtn').prop('disabled', true);
+	}
+
 	q.removeClass('open');
 	$('#cursor').removeClass('hidden');
 	ans.off();
 	blnk.off();
 }
 
-// Sets interactivity listeners for elements inside .content elements
-// This is executed every time .content changes
-function usrInteraction() {
+// Sets interactivity listeners for elements inside main elements
+// This is executed every time main changes
 
-	// When the answers elements are touched or entered into with mouse
-	$('.content .card .select').on(touch?'touchstart':'mouseenter', function(event) {
+// When the answers elements are touched or entered into with mouse
+$('main').on(touch?'touchstart':'mouseenter focusin', '.content .card .select', function(e) {
 
-		// prevents lower element from being interacted with
-		event.stopPropagation();
-		$(this).addClass('open');
-		openAns($(this));
-	});
+	// prevents lower element from being interacted with
+	event.stopPropagation();
+	openAns($(this));
+});
 
-	// When mouse leaves answers elements
-	$('.content .card .select').on('mouseleave', function() {
+$('main').on(touch?'touchstart':'click', '.content .card .select .blank', function(e) {
+	$(this).find('.selected').removeClass('selected');
+	$(this).removeClass('selectionMade');
+});
+
+$('main').on('click','#scoreMeter+button', function() {
+	localStorage.clear();
+	storageSetup();
+	scoreMeter();
+})
+
+
+$('main').on('keydown', '.content .card .select', function(e) {
+	// console.log(e.which);
+	e.stopPropagation();
+
+	let t = $(this);
+
+	switch (e.which) {
+		// Up arrow
+		case 38:
+			openAns(t);
+			t.find('.answer').removeClass('selected');
+			t.find('.topAns').addClass('selected');
+			break;
+		// Down arrow
+		case 40:
+			openAns(t);
+			t.find('.answer').removeClass('selected');
+			t.find('.botAns').addClass('selected');
+			break;
+		// Escape
+		case 27:
+			t.find('.answer').removeClass('selected');
+			closeAns(t);
+			break;
+		// Enter
+		case 13:
+		// Space
+		case 32:
+			e.preventDefault();
+			if (t.hasClass('open') && t.find('.selected').length) {
+				closeAns(t);
+				t.nextAll('.select, .qBtn').eq(0)
+					.focus()
+					.addClass('open');
+			} else {
+				openAns(t);
+			}
+			break;
+		// Right arrow
+		case 39:
+			e.preventDefault();
+
+			if (t.nextAll('.select').length) {
+				if (t.hasClass('open')) {
+					closeAns(t);
+				}
+				t.nextAll('.select').eq(0)
+					.focus()
+					.addClass('open');
+			}
+			break;
+		// Left arrow
+		case 37:
+			e.preventDefault();
+
+			if (t.prevAll('.select').length) {
+				if (t.hasClass('open')) {
+					closeAns(t);
+				}
+				t.prevAll('.select').eq(0)
+					.focus()
+					.addClass('open');
+			}
+			break;
+	}
+})
+
+// When mouse leaves answers elements
+$('main').on('mouseleave focusout keyup', '.content .card .select', function(e) {
+	if (e.which === 13) {
+		e.preventDefault();
+	} else if (!e.which) {
 		closeAns($(this));
-	});
+	}
+});
+
+function usrInteraction() {
 
 	// If touch is false, apply fanciness to button elements
 	touch?'':setFanciness($('button'));
@@ -392,7 +555,7 @@ function animateValue(id, start, end, duration) {
 	run();
 }
 
-function calcScore(ls,callback=function(){}) {
+function calcScore(ls=JSON.parse(localStorage.getItem('Qprogress')),callback=function(){}) {
 
 	// Sets initial vairable values
 	let score = 0,
@@ -407,10 +570,10 @@ function calcScore(ls,callback=function(){}) {
 	}
 
 	// Calculates the final scoring value
-	let fin = score/(ansCount+5);
+	let fin = score/(Math.max(ansCount+1, 6));
 	// Sets status class on body element to apply relevant styling
 	$('body')
-		.removeClass()
+		.removeClass('status-meh status-pre status-de')
 		.addClass(Math.abs(fin)<0.2?'status-meh':(score>0?'status-pre':'status-de'));
 
 	ls.curScore = fin;
@@ -437,13 +600,19 @@ function scoreMeter() {
 
 	// Sets the reset button class to inactive if no questions have been answered
 	// Removes incactive class if any questions have eben answered
-	qs > 0?btn.removeClass('inactive'):btn.addClass('inactive');
+	if (qs) {
+		btn.removeClass('inactive')
+			 .prop('disabled', false);
+	} else {
+		btn.addClass('inactive')
+			 .prop('disabled', true);
+	}
 
 	// Calculates the score & time
 	let pos = calcScore(ls);
 
 	// Calculates anim time based on how many questions have been answered since last time seeing score
-	let t = Math.abs((pos-scoreMeterVal[0])*4000);
+	let t = Math.abs((pos-scoreMeterVal[0])*2000);
 
 	// console.log(pos);
 
@@ -489,60 +658,64 @@ function nextQ(move=true,start=false) {
 
 		let randNo = 2*Math.floor(1000*Math.random());
 
+		let qID = 'q'+randQ;
 
-		if (questList['q'+randQ].text3) {
+
+		if (questList[qID].text3) {
 			// console.log(randNo,randP);
 			let cardInfo = {
-				qID: questList['q'+randQ].ID,
+				qID: questList[qID].ID,
 				qCount: lastQ?'Last Question':'Question '+(ls.QIDs.length+1),
-				qText1: questList['q'+randQ].text1,
-				qText2: questList['q'+randQ].text2,
-				q1AnsTop: questList['q'+randQ].option1[randP[0]?'pre':'de'],
-				q1AnsBot: questList['q'+randQ].option1[randP[0]?'de':'pre'],
-				qText3: questList['q'+randQ].text3,
-				q2AnsTop: questList['q'+randQ].option2[randP[1]?'pre':'de'],
-				q2AnsBot: questList['q'+randQ].option2[randP[1]?'de':'pre']
+				qText1: questList[qID].text1,
+				qText2: questList[qID].text2,
+				q1AnsTop: questList[qID].option1[randP[0]?'pre':'de'],
+				q1AnsBot: questList[qID].option1[randP[0]?'de':'pre'],
+				qText3: questList[qID].text3,
+				q2AnsTop: questList[qID].option2[randP[1]?'pre':'de'],
+				q2AnsBot: questList[qID].option2[randP[1]?'de':'pre'],
+				qRule: questList[qID].rule
 			};
 
 			let nextCard = '<div class="content"><div class="card" id="q-'+cardInfo.qID+
-				'"><p class="qCount">'+cardInfo.qCount+
+				'"><p class="qInfo">'+cardInfo.qCount+
 				'</p><span>'+cardInfo.qText1+
-				'</span><div class="select"><div name="'+('a-'+(randNo+randP[0]))+
+				'</span><div class="select" tabindex="0"><div name="'+('a-'+(randNo+randP[0]))+
 				'" class="answer topAns">'+cardInfo.q1AnsTop+
 				'</div><div class="blank">×</div><div name="'+('a-'+(randNo+randP[0]))+
 				'" class="answer botAns">'+cardInfo.q1AnsBot+
 				'</div></div><span>'+cardInfo.qText2+
-				'</span><div class="select"><div name="'+('a-'+(randNo+randP[1]))+
+				'</span><div class="select" tabindex="0"><div name="'+('a-'+(randNo+randP[1]))+
 				'" class="answer topAns">'+cardInfo.q2AnsTop+
 				'</div><div class="blank">×</div><div name="'+('a-'+(randNo+randP[1]))+
 				'" class="answer botAns">'+cardInfo.q2AnsBot+
 				'</div></div><span>'+cardInfo.qText3+
-				'</span><button class="qBnt" onclick="recordQ()">'+(lastQ?'See Your Score':'Next')+
-				'</button></div></div>';
+				'</span><button disabled class="qBtn full-width" onclick="recordQ()">'+(lastQ?'See Your Score':'Next')+
+				'</button><p class="qRule"><a target="_blank" href="'+cardInfo.qRule+'">More Info</a></p></div></div>';
 				cont.after(nextCard);
 
 
 		} else {
 			// console.log(randNo,randP[0]);
 			let cardInfo = {
-				qID: questList['q'+randQ].ID,
+				qID: questList[qID].ID,
 				qCount: lastQ?'Last Question':'Question '+(ls.QIDs.length+1),
-				qText1: questList['q'+randQ].text1,
-				qText2: questList['q'+randQ].text2,
-				qAnsTop: questList['q'+randQ].option1[randP[0]?'pre':'de'],
-				qAnsBot: questList['q'+randQ].option1[randP[0]?'de':'pre']
+				qText1: questList[qID].text1,
+				qText2: questList[qID].text2,
+				qAnsTop: questList[qID].option1[randP[0]?'pre':'de'],
+				qAnsBot: questList[qID].option1[randP[0]?'de':'pre'],
+				qRule: questList[qID].rule
 			};
 
 			let nextCard = '<div class="content"><div class="card" id="q-'+cardInfo.qID+
-				'"><p class="qCount">'+cardInfo.qCount+
+				'"><p class="qInfo">'+cardInfo.qCount+
 				'</p><span>'+cardInfo.qText1+
-				'</span><div class="select"><div name="'+('a-'+(randNo+randP[0]))+
+				'</span><div class="select" tabindex="0"><div name="'+('a-'+(randNo+randP[0]))+
 				'" class="answer topAns">'+cardInfo.qAnsTop+
 				'</div><div class="blank">×</div><div name="'+('a-'+(randNo+randP[0]))+
 				'" class="answer botAns">'+cardInfo.qAnsBot+
 				'</div></div><span>'+cardInfo.qText2+
-				'</span><button class="qBnt" onclick="recordQ()">'+(lastQ?'See Your Score':'Next')+
-				'</button></div></div>';
+				'</span><button class="qBtn full-width" onclick="recordQ()">'+(lastQ?'See Your Score':'Next')+
+				'</button><p class="qRule"><a target="_blank" href="'+cardInfo.qRule+'">More Info</a></p></div></div>';
 				cont.after(nextCard);
 
 		}

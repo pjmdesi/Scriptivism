@@ -1,18 +1,44 @@
 <div class="content">
-	<p>Description of website.</p>
-	<br />
-	<button onclick="">Turn off motion effects</button>
-	<br />
-	<p>Definitions of each go here (maybe move to score page)</p>
-	<p>Pre: You strictly adhere to the rules of language, using those rules to be specific and unambiguous. Often this includes a wide, sometimes niché, vocabulary used in complex ways.</p>
-	<p>Meh: You don't care too much about following the rules. You do what makes sense to you, and it works most of the time.</p>
-	<p>De: You use language loosely, relying on context and social understanding to add meaning to simpler, narrower word choices.</p>
-	<br />
-	<p>Speaking to how one is not superior to the other and how language evolves with the 2 schools working in tandem. Use some kind of analogy here (ideas: life itself, driving [rules have to be broken to know what is a useful rule and what isn't, split infinitives are an example])</p>
-	<br />
-	<p>Common differences in pres vs des and an explaination of the spectrum. Explain how some things are difficult to ask Qs about like dangling participles.</p>
-	<br />
-	<p>How the website works. You own your data. Don't clear web data if you want to keep your results. This is a website for fun, so it's not a great loss if you lose your data.</p>
-	<br />
-	<p>Form to submit Qs goes here: make with netlify</p>
+	<p><b>Types of Scriptivists</b></p>
+	<div class="cardGrid">
+		<div id="preCard" class="card">
+			<p><b>Prescriptivists</b> strictly adhere to the rules of a language, using those rules to be specific and unambiguous. Often, this demands a wide, niché vocabulary and complex grammar.</p>
+		</div>
+		<div id="mehCard" class="card">
+			<p><b>Mehscriptivists</b> don't care too much about following the rules. They do what makes sense to them, and it works most of the time. They use language in ways that fall on both sides of the spectrum.</p>
+		</div>
+		<div id="deCard" class="card">
+			<p><b>Descriptivists</b> use language more loosely, relying on context and social interaction for the meaning of words and phrases, sometimes directly violating "the rules."</p>
+		</div>
+	</div>
+	<br>
+	<p><b>Which is best?</b></p>
+	<p>In order for a language to remain useful, it must evolve. When new technology is invented, strange concepts are explored, and unique art is created, language changes too. A healthy language is used by people who fall on all parts of the scriptivism spectrum. Language takes experimentors and curators to get better.</p>
+	<p>One may think that <span class="de">Descriptivists</span> are just <i>wrong</i>. For instance, when someone uses the word "ginormous", a <span class="pre">Prescriptivist</span> might call that "slang" and point out that it's a combination of <i>gigantic</i> and <i>enormous</i>. But everone knows what a person means when they say "ginormous".
+	<p><b>Please keep in mind:</b> This website is a <i>Web Interface experiment</i> (I am a web developer, not an English professor). It's content is not intended to be taken seriously.</p>
+	<p>This website uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage" target="_blank">localStorage</a> to store your answers. Don't clear this data if you want to keep them. This is a website for fun, so it's not a great loss if you lose your data.</p>
+	<br>
+	<p><b>Submit a Question</b></p>
+	<form id="qform" name="request-info" action="#" method="POST" netlify-honeypot="bot-field" data-netlify="true">
+		<input name="bot-field" class="hidden"/>
+		<label for="EMAIL" class="hidden">Email</label>
+		<input type="email" value="" name="EMAIL" placeholder="Email" required />
+		<label for="NAME" class="hidden">Name</label>
+		<input type="text" value="" name="NAME" placeholder="Name" required />
+		<label for="Question" class="hidden">Your Submission</label>
+		<textarea type="text" value="" name="Question" maxlength="300" rows="3" placeholder="Include the question and both answers (limit 300 chars)" required />
+		<button type="submit" value="Send">Submit</button>
+	</form>
+	<br>
+	<p><b>Settings</b></p>
+	<div id="settings">
+		<button id="motionToggle">Turn off motion effects</button>
+		<button id="cursorToggle">Turn off custom cursor</button>
+	</div>
+	<div class="spacer"></div>
 </div>
+<script type="text/javascript">
+	// console.log(mot, cur);
+	if (!mot) $('#motionToggle').html('Turn on motion effects');
+	if (!cur) $('#cursorToggle').html('Turn on custom cursor');
+</script>

@@ -4,12 +4,13 @@
 			"ID": "1",
 			"diff": 1,
 			"name": "Anyway",
-			"text1": "",
+			"text1": "My laptop battery was dying, but I decided run Crysis ",
 			"option1": {
-				"pre": "Anyway",
-				"de": "Anyways"
+				"pre": "anyway",
+				"de": "anyways"
 			},
-			"text2": ", i didn't like it."
+			"text2": ".",
+			"rule": "https://www.dictionary.com/e/anyway-vs-anyways-vs-any-way/"
 		},
 		"q2": {
 			"ID": "2",
@@ -20,7 +21,8 @@
 				"pre": "regardless",
 				"de": "irregardless"
 			},
-			"text2": " of the danger."
+			"text2": " of the danger.",
+			"rule": "https://www.merriam-webster.com/words-at-play/is-irregardless-a-real-word-heh-heh"
 		},
 		"q3": {
 			"ID": "3",
@@ -31,18 +33,20 @@
 				"pre": "couldn't",
 				"de": "could"
 			},
-			"text2": " care less."
+			"text2": " care less.",
+			"rule": "https://www.merriam-webster.com/words-at-play/could-couldnt-care-less"
 		},
 		"q4": {
 			"ID": "4",
 			"diff": 1,
-			"name": "Supposedly",
-			"text1": "They ",
+			"name": "Supposably v Supposedly 1",
+			"text1": "Flying is ",
 			"option1": {
 				"pre": "supposedly",
 				"de": "supposably"
 			},
-			"text2": " made the right decision by choosing the eggplant."
+			"text2": " the safest way to fly.",
+			"rule": "https://www.dictionary.com/e/supposedly-vs-supposably/"
 		},
 		"q5": {
 			"ID": "5",
@@ -53,7 +57,8 @@
 				"pre": "could have",
 				"de": "could of"
 			},
-			"text2": " gone better."
+			"text2": " gone better.",
+			"rule": "https://www.ninja-creative.com/correct-english-grammar-could-of-or-could-have/"
 		},
 		"q6": {
 			"ID": "6",
@@ -64,18 +69,20 @@
 				"pre": "enormous",
 				"de": "ginormous"
 			},
-			"text2": " house sold for how much?"
+			"text2": " house sold for how much?",
+			"rule": "https://www.quickanddirtytips.com/education/grammar/is-ginormous-a-word"
 		},
 		"q7": {
 			"ID": "7",
 			"diff": 1,
 			"name": "Literaly",
-			"text1": "question7",
+			"text1": "A.I. is going to take over the world. ",
 			"option1": {
-				"pre": "literally",
-				"de": "figuratively"
+				"pre": "Figuratively",
+				"de": "Literally"
 			},
-			"text2": "zeta."
+			"text2": " everyone knows that.",
+			"rule": "https://www.thoughtco.com/literally-and-figuratively-1692758"
 		},
 		"q8": {
 			"ID": "8",
@@ -88,21 +95,23 @@
 			},
 			"text2": " was the clown murdered ",
 			"option2": {
-				"pre": "",
+				"pre": "—",
 				"de": "by"
 			},
-			"text3": "?"
+			"text3": "?",
+			"rule": "https://grammar.yourdictionary.com/parts-of-speech/prepositions/ending-a-sentence-with-a-preposition.html"
 		},
 		"q9": {
 			"ID": "9",
 			"diff": 1,
 			"name": "oxford camma 1",
-			"text1": "It isn't enough to feed them, they have to massage them, clean them",
+			"text1": "It isn't enough to feed them. You have to massage them, clean them",
 			"option1": {
 				"pre": ", and ",
 				"de": " and "
 			},
-			"text2": "keep them happy."
+			"text2": "keep them happy.",
+			"rule": "https://www.grammarly.com/blog/what-is-the-oxford-comma-and-why-do-people-care-so-much-about-it/"
 		},
 		"q10": {
 			"ID": "10",
@@ -113,7 +122,8 @@
 				"pre": "I",
 				"de": "me"
 			},
-			"text2": " won't make it out of here."
+			"text2": " won't make it out of here.",
+			"rule": "http://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
 		},
 		"q11": {
 			"ID": "11",
@@ -124,7 +134,8 @@
 				"pre": "myself",
 				"de": "me"
 			},
-			"text2": " to the park twice a week."
+			"text2": " to the park twice a week.",
+			"rule": "http://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
 		},
 		"q12": {
 			"ID": "12",
@@ -135,18 +146,78 @@
 				"pre": "me",
 				"de": "I"
 			},
-			"text2": " after they found out about the mess we had made."
+			"text2": " after they found out about the mess we had made.",
+			"rule": "http://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
 		},
 		"q13": {
 			"ID": "13",
-			"diff": 1,
-			"name": "had or have",
+			"diff": 3,
+			"name": "run or ran",
 			"text1": "We had ",
 			"option1": {
 				"pre": "run",
 				"de": "ran"
 			},
-			"text2": " in the race before, but we are eager to try again."
+			"text2": " in the race before, and we are eager to try again.",
+			"rule": "https://strategiesforparents.com/have-run-or-had-run-when-to-use-the-proper-past-tense/"
+		},
+		"q14": {
+			"ID": "14",
+			"diff": 1,
+			"name": "to boldy split infinitives",
+			"text1": "To ",
+			"option1": {
+				"pre": "go boldly",
+				"de": "boldly go"
+			},
+			"text2": " where no man has gone before.",
+			"rule": "https://www.merriam-webster.com/words-at-play/to-boldly-split-infinitives"
+		},
+		"q15": {
+			"ID": "15",
+			"diff": 1,
+			"name": "A whole nother",
+			"text1": "You took this thing to a ",
+			"option1": {
+				"pre": "whole other",
+				"de": "whole 'nother"
+			},
+			"text2": " level.",
+			"rule": "https://grammarist.com/usage/a-whole-nother/"
+		},
+		"q16": {
+			"ID": "16",
+			"diff": 3,
+			"name": "me, myself, and I 4",
+			"text1": "I wanted to put all this behind ",
+			"option1" : {
+				"pre": "me",
+				"de": "myself"
+			},
+			"text2": " and move on.",
+			"rule": "http://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
+		},
+		"q17": {
+			"ID": "17",
+			"diff": 2,
+			"name": "Supposably v Supposedly 2",
+			"text1": "Some vegtables could ",
+			"option1": {
+				"pre": "supposably","de":"supposedly"
+			},
+			"text2": " be good baked into good cupcakes.",
+			"rule": "https://www.dictionary.com/e/supposedly-vs-supposably/"
+		},
+		"q18" : {
+			"ID": "18",
+			"diff": 1,
+			"name": "Anyway 2",
+			"text1": "Thanks for interupting me. ",
+			"option1": {
+				"pre":"Anyway","de":"Anyways"
+			},
+			"text2": ", I'm going to move on to my next topic.",
+			"rule": "https://www.dictionary.com/e/anyway-vs-anyways-vs-any-way/"
 		}
 	}
 }

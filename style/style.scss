@@ -5,22 +5,27 @@ $de: #00B7E2;
 $meh: #5200D3;
 $pre: #FF0062;
 
-html {
-	cursor: none !important;
-}
+$bounce: cubic-bezier(0.4, 0, 0.5, 1.75);
 
 body {
 	display: flex;
 	flex-direction: column;
-	flex-wrap: nowrap;
 	justify-content: space-between;
 	font-family: 'Roboto',sans-serif;
-	font-size: 24px;
-	background-color: #eee;
+	font-size: clamp(16px,3vmin,24px);
+	line-height: clamp(20px,calc(3vmin + 4px),30px);
+	background-color: darken($w, 10%);
 	height: 100vh;
 	width: 100vw;
+	perspective: 400px;
 	box-shadow: 0 0 120px rgba($meh, .15) inset;
+}
+
+body.custCursOn {
 	cursor: none !important;
+	#cursor {
+		display: block !important;
+	}
 	* {
 		cursor: none !important;
 	}
@@ -29,114 +34,6 @@ body {
 // ::-webkit-scrollbar {
 // 	display: none;
 // }
-
-#cursor {
-	$bounce: cubic-bezier(0.4, 0, 0.5, 1.75);
-	-webkit-backdrop-filter: blur(0px);
-	backdrop-filter: blur(0px);
-	pointer-events: none;
-	width: 16px;
-	height: 16px;
-	margin: -8px;
-	position: fixed;
-	box-sizing: content-box;
-	background: transparent;
-	border: 3px solid $meh;
-	border-radius: 50%;
-	z-index: 999;
-	transition: width .2s $bounce, height .2s $bounce, margin .2s $bounce, border-color .2s, -webkit-backdrop-filter .2s, backdrop-filter .2s;
-	&:after {
-		content: ' ';
-		font-size: 36px;
-		font-weight: 900;
-		line-height: 64px;
-		width: 100%;
-		height: 100%;
-		text-align: center;
-		vertical-align: middle;
-		position: absolute;
-		color: transparent;
-		transition: color .17s, line-height .17s $bounce, font-size .17s ease;
-	}
-	&.hidden {
-		border-width: 0px;
-		margin: 0px;
-		width: 0px;
-		height: 0px;
-	}
-	&.hover {
-		width: 48px;
-		height: 48px;
-		margin: -24px;
-		&.link:after {
-			content: '↗';
-			line-height: 50px;
-		}
-	}
-	&.mousedown {
-		width: 32px;
-		height: 32px;
-		margin: -16px;
-		&:after, &.link:after {
-			font-size: 24px;
-			line-height: 34px;
-		}
-	}
-	&.mouseRefuse {
-		-webkit-backdrop-filter: blur(5px);
-		backdrop-filter: blur(5px);
-		width: 44px;
-		height: 44px;
-		margin: -22px;
-		border-color: $b !important;
-		&:after {
-			content: '×';
-			color: $b;
-			line-height: 44px;
-		}
-	}
-}
-
-a {
-	font-weight: 700;
-	transition: bottom .3s ease, background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), box-shadow .3s ease;
-	&:hover {
-		letter-spacing: .125em;
-	}
-	#menu &{
-		letter-spacing: .175em;
-		&:hover, &.active {
-			letter-spacing: .35em;
-		}
-	}
-}
-
-i {
-	font-style: italic;
-}
-
-.de {
-	color: $de;
-	font-weight: 700;
-	text-shadow: 0 2px 4px rgba($de, .3);
-}
-
-.meh {
-	color: $meh;
-	font-weight: 700;
-	text-shadow: 0 2px 4px rgba($meh, .3);
-}
-
-.pre {
-	color: $pre;
-	font-weight: 700;
-	text-shadow: 0 2px 4px rgba($pre, .3);
-}
-
-svg {
-	transition: fill .3s;
-	height: 100%;
-}
 
 header, footer {
 	display: flex;
@@ -151,29 +48,48 @@ header, footer {
 header {
 	#sitelogo {
 		display: flex;
-		width: 200px;
+		width: 181px;
 		height: 36px;
 		justify-content: flex-start;
+		transform: scale(1);
+		transition: transform .3s $bounce;
+		&:hover, &:focus {
+			transform: scale(1.1);
+		}
+		&:active {
+			transform: scale(1.05);
+		}
 	}
 	#scriptStatus {
 		text-align: center;
-		font-size: 50%;
-		font-weight: 400;
 		display: block;
-		height: 40px;
+		font-size: 75%;
+		font-weight: 400;
+		p {
+			margin-bottom: 0px;
+		}
 		#statusCont {
 			display: flex;
-			height: 20px;
 			vertical-align: top;
 			justify-content: center;
 			margin-right: 18px;
 			#statusGraphic {
 				height: 24px;
 				width: 56px;
+				line-height: 20px;
 				overflow: hidden;
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: flex-end;
+				#De {
+					fill: $de;
+				}
+				#Meh {
+					fill: $meh;
+				}
+				#Pre {
+					fill: $pre;
+				}
 				svg {
 					height: 20px;
 					position: relative;
@@ -206,29 +122,29 @@ header {
 	}
 }
 
-#main {
-	flex: 1;
-	position: relative;
+main {
 	display: flex;
 	flex-wrap: nowrap;
+	&.about {
+		align-items: flex-start;
+	}
 	justify-content: flex-start;
-	overflow: hidden;
+	align-items: center;
 	width: 100vw;
-	perspective: 500px;
+	overflow-x: hidden;
+	overflow-y: visible;
 	.content {
 		display: flex;
 		flex-direction: column;
 		position: relative;
-		left: 0%;
-		justify-content: center;
+		left: 0;
+		top: 0;
 		align-items: center;
 		min-width: 100vw;
-		height: 100%;
 		box-sizing: border-box;
 		padding: 50px;
-		overflow-y: scroll;
+		overflow-y: visible;
 		&#startScreen {
-			line-height: 30px;
 			text-align: center;
 			p, i {
 				max-width: 720px;
@@ -240,26 +156,264 @@ header {
 		}
 		.card {
 			position: relative;
-			//background-color: $w;
 			border-radius: 22px;
 			padding: 13px;
 			max-width: 720px;
 			transition: box-shadow .3s;
-			p {
-				margin: 12px 0;
-			}
-			.qCount {
-				font-family: monospace;
+			.qInfo {
+				width: 100%;
 				position: relative;
-				left: 4px;
-				color: rgba($b, 0.4);
 				font-size: 60%;
+				color: rgba($b, 0.4);
+			}
+			.qRule {
+				text-align: center;
+				font-size: 60%;
+				line-height: 24px;
+				width: 100%;
+				margin: 8px auto 0;
+				color: rgba($b, 0.4);
 			}
 			button {
 				margin-top: 16px;
 			}
 		}
 	}
+}
+
+footer {
+	font-size: 60%;
+	font-weight: 600;
+	text-align: center;
+	box-sizing: border-box;
+	border-bottom: 5px solid $b;
+	transition: border-bottom-color .3s;
+	#credits {
+		display: flex;
+		align-content: center;
+		justify-content: center;
+		position: relative;
+		border-radius: 50%;
+		background-color: darken($w, 10%);
+		box-shadow: 0 0 0 $b;
+		padding: 8px;
+		box-sizing: border-box;
+		height: 48px;
+		width: 48px;
+		bottom: 0px;
+		margin: 0 10px;
+		z-index: 9;
+		svg {
+			height: 32px;
+			transition: fill .3s;
+		}
+		&:hover, &:focus {
+			bottom: 5px;
+			box-shadow: 0 5px 25px rgba(red, .4);
+			svg {
+				fill: red;
+				-webkit-filter: drop-shadow( 0px 0px 4px rgba(red, .4));
+			}
+		}
+	}
+	#GitHubPrj {
+		margin-right: 108px;
+	}
+	#socialMedia a{
+		margin: 0 8px;
+	}
+}
+
+#cursor {
+	display: none;
+	-webkit-backdrop-filter: blur(0px);
+	backdrop-filter: blur(0px);
+	pointer-events: none;
+	width: 16px;
+	height: 16px;
+	margin: -8px;
+	position: fixed;
+	box-sizing: content-box;
+	background: transparent;
+	border: 3px solid $meh;
+	border-radius: 51px;
+	z-index: 999;
+	transition: width .2s $bounce, height .2s $bounce, margin .2s $bounce, border-color .2s, border-width .2s, border-radius .2s $bounce, -webkit-backdrop-filter .2s, backdrop-filter .2s;
+	&:after {
+		content: ' ';
+		font-size: 0px;
+		font-weight: 900;
+		line-height: 64px;
+		width: 100%;
+		height: 100%;
+		text-align: center;
+		vertical-align: middle;
+		position: absolute;
+		color: transparent;
+		transition: color .17s, line-height .17s $bounce, font-size .17s ease;
+	}
+	&.hidden {
+		border-width: 0px;
+		margin: 0px;
+		width: 0px;
+		height: 0px;
+	}
+	&.hover {
+		-webkit-backdrop-filter: blur(5px);
+		backdrop-filter: blur(5px);
+		width: 48px;
+		height: 48px;
+		margin: -24px;
+		&.link:after {
+			content: '↗';
+			font-size: 36px;
+			line-height: 50px;
+		}
+	}
+	&.mousedown {
+		-webkit-backdrop-filter: blur(5px);
+		backdrop-filter: blur(5px);
+		width: 32px;
+		height: 32px;
+		margin: -16px;
+		&:after, &.link:after {
+			font-size: 24px;
+			line-height: 34px;
+		}
+	}
+	&.mouseRefuse {
+		-webkit-backdrop-filter: blur(5px);
+		backdrop-filter: blur(5px);
+		width: 44px;
+		height: 44px;
+		margin: -22px;
+		border-color: $b !important;
+		&:after {
+			content: '×';
+			color: $b !important;
+			font-size: 24px;
+			color: $b;
+			line-height: 44px;
+		}
+	}
+	&.inputHover {
+		width: 0;
+		height: 20px;
+		margin: 0;
+		border-radius: 4px;
+		transition-duration: .1s;
+		&.mousedown {
+			border-width: 1px;
+			margin: 2px;
+		}
+	}
+}
+
+#qform {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-template-rows: auto;
+	gap: 10px;
+
+	width: 100%;
+	max-width: 600px;
+	textarea, button {
+		grid-column: span 2;
+	}
+}
+
+#settings {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 10px;
+
+	width: 100%;
+	max-width: 600px;
+}
+
+a {
+	font-weight: 700;
+	transition: bottom .3s ease, background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), box-shadow .3s ease;
+	&:hover, &:focus {
+		letter-spacing: .125em;
+	}
+	#menu & {
+		letter-spacing: .175em;
+		&:active, &.active {
+			letter-spacing: .25em;
+		}
+		&:hover, &:focus {
+			letter-spacing: .35em;
+		}
+	}
+	footer & {
+		color: transparent;
+		&:hover, &:focus {
+			color: rgba($b, .4);
+			&#twitter {
+				color: #1da1f2ff;
+			}
+			&#youtube {
+				color: #ff0000ff;
+			}
+			&#github {
+				color: #24292eff;
+			}
+			&#twitch {
+				color: #a970ffff;
+			}
+		}
+	}
+	footer:hover & {
+		color: rgba($b, .4);
+	}
+}
+
+i {
+	font-style: italic;
+}
+
+b {
+	font-weight: bold;
+}
+
+p {
+	max-width: 70ch;
+	margin-bottom: 16px;
+}
+
+.de {
+	color: $de;
+	font-weight: 700;
+	text-shadow: 0 2px 4px rgba($de, .3);
+}
+
+.meh {
+	color: $meh;
+	font-weight: 700;
+	text-shadow: 0 2px 4px rgba($meh, .3);
+}
+
+.pre {
+	color: $pre;
+	font-weight: 700;
+	text-shadow: 0 2px 4px rgba($pre, .3);
+}
+
+.spacer {
+	display: block;
+	position: relative;
+	width: 100%;
+	height: 50px;
+}
+
+.hidden {
+	display: none;
+}
+
+svg {
+	transition: fill .3s;
+	height: 100%;
 }
 
 .select {
@@ -275,6 +429,7 @@ header {
 	overflow: hidden;
 	box-sizing: content-box;
 	white-space: nowrap;
+	outline: none;
 	transition: height .3s ease, margin .3s ease, border .1s ease;
 	border-bottom: 3px solid $b;
 	overflow: visible;
@@ -283,6 +438,7 @@ header {
 		box-sizing: border-box;
 		top: -$ansH;
 		height: $ansH;
+		line-height: 23px;
 		padding: 4px 8px;
 		transition: transform .17s ease, height .3s ease, background-color .3s, top .3s ease, color .3s, opacity .3s;
 		border-radius: 10px;
@@ -332,25 +488,74 @@ header {
 	}
 }
 
-button {
+button, input, textarea {
 	border-radius: 10px;
+	box-sizing: border-box;
+	padding: 5px 18px 5px 20px;
+	&.full-width {
+		width: 100%;
+	}
+}
+
+button {
 	font-weight: 600;
-	cursor: pointer;
-	padding: 8px 18px 8px 20px;
 	color: $w;
-	font-size: 60%;
-	width: 100%;
+	border: 3px solid transparent;
+	width: auto;
 	text-transform: uppercase;
 	letter-spacing: .2em;
-	transition: background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499);
-	&:hover {
+	transition: background-color .3s, border-color .3s, color .3s, letter-spacing .3s $bounce;
+	&:hover, &:focus {
 		letter-spacing: .4em;
+		border-color: $w;
+	}
+}
+
+input, textarea {
+	display: inline-block;
+	width: 100%;
+	position: relative;
+	border: 3px solid $w;
+	box-sizing: border-box;
+	&::-webkit-input-placeholder {
+		color: rgba($b, .5);
+		letter-spacing: 0;
+		-webkit-transition: border-color .3s, color .3s, font-weight .3s, letter-spacing .3s ease;
+		transition: border-color .3s, color .3s, font-weight .3s, letter-spacing .3s ease;
+	}
+	&:focus::-webkit-input-placeholder {
+		color: rgba($b, .25);
+	}
+	&:not(:focus):hover::-webkit-input-placeholder {
+		font-weight: 700;
+		letter-spacing: .1em;
+	}
+}
+
+textarea {
+	position: relative;
+	resize: vertical;
+	min-height: 67px;
+	&:after {
+		content: "0 / 300";
+		// display: inline-block;
+		// position: absolute;
+		// right: 10px;
+		// bottom: 10px;
+		// font-size: 10px;
+		// font-weight: 700;
+		// color: rgba($b, 0.25);
+	}
+	&:hover {
+		&:after {
+			color: $meh;
+		}
 	}
 }
 
 #startButton {
 	font-weight: 900;
-	font-size: 48px;
+	font-size: 200%;
 	color: $b;
 	width: auto;
 	background-color: transparent;
@@ -361,7 +566,8 @@ button {
 	position: relative;
 	justify-content: center;
 
-	width: 100%;
+	width: calc(100% - 25px);
+	max-width: 1440px;
 	padding: 50px 0;
 	.bar {
 		display: inline-block;
@@ -434,62 +640,9 @@ button {
 	}
 }
 
-
 .select:not(.selectionMade)~button, .score button.inactive {
 	pointer-events: none;
 	background-color: lightgray;
-}
-
-footer {
-	font-size: 60%;
-	font-weight: 600;
-	text-align: center;
-	box-sizing: border-box;
-	border-bottom: 5px solid $b;
-	color: #0000;
-	transition: border-bottom-color .3s;
-	#credits {
-		display: flex;
-		align-content: center;
-		justify-content: center;
-		position: relative;
-		border-radius: 50%;
-		box-shadow: 0 0 0 rgba(0,0,0,0);
-		padding: 8px;
-		box-sizing: border-box;
-		height: 48px;
-		width: 48px;
-		bottom: 0px;
-		margin: 0 10px;
-		&:hover {
-			bottom: 5px;
-			box-shadow: 0 5px 25px rgba(0,0,0,.4);
-		}
-		svg {
-			height: 32px;
-		}
-	}
-	#GitHubPrj {
-		margin-right: 108px;
-	}
-	#socialMedia a{
-		margin: 0 8px;
-	}
-	&:hover {
-		color: #0005;
-		#twitter:hover {
-			color: #1da1f2ff;
-		}
-		#youtube:hover {
-			color: #ff0000ff;
-		}
-		#github:hover {
-			color: #24292eff;
-		}
-		#twitch:hover {
-			color: #a970ffff;
-		}
-	}
 }
 
 // switches colors for dynamic items
@@ -504,20 +657,28 @@ $sD: 6px;
 $cD: 3px;
 
 @each $type, $col in $types {
-	$cardOutShad: $sD $sD (2*$sD) (-$sD) rgba($col, .5);
+	$cardOutShad: $sD $sD (2*$sD) (-$sD) rgba($col, .6);
 	$cardOutHlgh: (-$sD) (-$sD) (2*$sD) (-$sD) $w;
 	$cardInnShad: (-$sD/2) (-$sD/2) ($sD) (-$sD) rgba($col, .5) inset;
 	$cardInnHlgh: ($sD/2) ($sD/2) ($sD) (-$sD) $w inset;
 	$cardShad: $cardOutShad, $cardOutHlgh, $cardInnShad, $cardInnHlgh;
-	$curOutShad: $cD $cD (2*$cD) (-$cD) rgba($col, .5);
+	$curOutShad: $cD $cD (2*$cD) (-$cD) rgba($col, .6);
 	$curOutHlgh: (-$cD) (-$cD) (2*$cD) (-$cD) $w;
 	$curInnShad: (-$cD/2) (-$cD/2) ($cD) (-$cD) rgba($col, .5) inset;
 	$curInnHlgh: ($cD/2) ($cD/2) ($cD) (-$cD) $w inset;
 	$curShad: $curOutShad, $curOutHlgh, $curInnShad, $curInnHlgh;
 	body.status-#{$type} {
-		#sitelogo.active, #sitelogo:hover, #statusGraphic, #credits {
-			svg {
-				fill: $col;
+		::-moz-selection {
+			background-color: rgba($col, .25);
+		}
+		::selection {
+			background-color: rgba($col, .25);
+		}
+		#sitelogo {
+			&:focus, &:hover, &.active {
+				svg {
+					fill: $col;
+				}
 			}
 		}
 		#statusGraphic svg {
@@ -529,15 +690,31 @@ $cD: 3px;
 				bottom: 0px;
 			}
 		}
-		#startButton:hover, a:hover, a.active, #GitHubPrj:hover, .answer, #scoreMeter>#indicator.set>#indicatorVal, #cursor.mousedown:after {
+		#startButton:hover, #startButton:focus, a:hover, a:focus, a.active, #GitHubPrj:hover, .answer, #scoreMeter>#indicator.set>#indicatorVal, #cursor.mousedown:after {
 			color: rgba($col, 1.0);
 			text-shadow: 0 2px 4px rgba($col, .3);
 		}
 		button, .selected {
 			background-color: $col;
 		}
+		input, textarea {
+			&:focus {
+				border-color: $col;
+			}
+			&:not(:focus):hover::-webkit-input-placeholder {
+				color: $col;
+			}
+		}
 		#cursor {
+			color: $col;
 			border-color: $col;
+			box-shadow: $curShad;
+			&:after {
+				color: $col;
+			}
+			&.inputHover {
+				background-color: $col;
+			}
 		}
 		footer {
 			border-bottom-color: $col;
@@ -547,9 +724,6 @@ $cD: 3px;
 		}
 		.card {
 			box-shadow: $cardShad;
-		}
-		#cursor {
-			box-shadow: $curShad;
 		}
 		.select {
 			&.open.selectionMade {
@@ -561,22 +735,51 @@ $cD: 3px;
 	}
 }
 
-@media only screen and (max-width: 650px) {
+.cardGrid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(20ch,1fr));
+	gap: 1rem;
+	width: 100%;
+	max-width: 1000px;
+}
+
+#preCard,
+#mehCard,
+#deCard {
+	color: $w;
+	font-size: 85%;
+	line-height: 110%;
+	box-sizing: border-box;
+	width: 100%;
+	padding: 15px;
 	p {
-		font-size: 20px;
-		line-height: 27px;
+		margin: 0;
 	}
-	i {
-		font-size: 18px;
-		line-height: 22px;
-	}
-	#main .content#startScreen {
-		i, p {
-			margin: 9px 0;
-			font-size: 18px;
-			line-height: 19px;
-		}
-	}
+}
+
+#preCard {
+	background: $pre;
+	box-shadow: 6px 6px 12px -6px rgba($pre, .5),
+	-6px -6px 12px -6px $w,
+	-3px -3px 6px -6px rgba($pre, .5) inset,
+	3px 3px 6px -6px $w inset;
+}
+#mehCard {
+	background: $meh;
+	box-shadow: 6px 6px 12px -6px rgba($meh, .5),
+	-6px -6px 12px -6px $w,
+	-3px -3px 6px -6px rgba($meh, .5) inset,
+	3px 3px 6px -6px $w inset;
+}
+#deCard {
+	background: $de;
+	box-shadow: 6px 6px 12px -6px rgba($de, .5),
+	-6px -6px 12px -6px $w,
+	-3px -3px 6px -6px rgba($de, .5) inset,
+	3px 3px 6px -6px $w inset;
+}
+
+@media only screen and (max-width: 650px) {
 	header, footer {
 		justify-content: center;
 	}
