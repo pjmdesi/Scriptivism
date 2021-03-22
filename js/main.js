@@ -298,7 +298,7 @@ $(document).ready(function() {
 				// ie when cursor is in middle, coordinates are (0,0)
 				// when cursor is fully top-left, coordinates are (15,15)
 				yd = -(12 - 24*(x/w));
-				xd = 8 - 16*(y/h);
+				xd = 6 - 12*(y/h);
 
 				// Calculates the easing for the y rotation (looks like square root curve)
 				let calcY = (Math.abs(yd)/yd)*(Math.abs(yd)**(1/2));
