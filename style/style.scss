@@ -19,6 +19,14 @@ body {
 	width: 100vw;
 	perspective: 400px;
 	box-shadow: 0 0 120px rgba($meh, .15) inset;
+	&.touch {
+		.blank {
+			color: transparent !important;
+		}
+		footer a {
+			color: rgba($b, 0.4);
+		}
+	}
 }
 
 body.custCursOn {
@@ -41,7 +49,7 @@ header, footer {
 	flex-wrap: wrap;
 	justify-content: space-between;
 	width:100vw;
-	padding: 24px;
+	padding: clamp(12px,3vmin,24px);
 	box-sizing: border-box;
 }
 
@@ -146,13 +154,6 @@ main {
 		overflow-y: visible;
 		&#startScreen {
 			text-align: center;
-			p, i {
-				max-width: 720px;
-				margin: 20px 0;
-			}
-			button {
-				margin: 12px 0;
-			}
 		}
 		.card {
 			position: relative;
@@ -182,7 +183,7 @@ main {
 }
 
 footer {
-	font-size: 60%;
+	font-size: 70%;
 	font-weight: 600;
 	text-align: center;
 	box-sizing: border-box;
@@ -195,7 +196,7 @@ footer {
 		position: relative;
 		border-radius: 50%;
 		background-color: darken($w, 10%);
-		box-shadow: 0 0 0 $b;
+		box-shadow: 0 0 0 -1px $b;
 		padding: 8px;
 		box-sizing: border-box;
 		height: 48px;
@@ -311,7 +312,7 @@ footer {
 
 #qform {
 	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	grid-template-columns: repeat(2, minmax(120px, 1fr));
 	grid-template-rows: auto;
 	gap: 10px;
 
@@ -379,7 +380,7 @@ b {
 
 p {
 	max-width: 70ch;
-	margin-bottom: 16px;
+	margin-bottom: clamp(12px,2vmin,20px);
 }
 
 .de {
@@ -457,7 +458,7 @@ svg {
 	}
 	.blank {
 		color: rgba(0,0,0,0);
-		line-height: 18px;
+		line-height: 14px;
 		transform: scale(1);
 	}
 	&.open {
@@ -471,7 +472,7 @@ svg {
 			}
 		}
 		.blank {
-			height: ($ansH - 8px);
+			height: ($ansH - 7px);
 			z-index: 2;
 		}
 	}
@@ -501,19 +502,23 @@ button {
 	font-weight: 600;
 	color: $w;
 	border: 3px solid transparent;
+	font-size: 60%;
 	width: auto;
 	text-transform: uppercase;
 	letter-spacing: .2em;
 	transition: background-color .3s, border-color .3s, color .3s, letter-spacing .3s $bounce;
-	&:hover, &:focus {
-		letter-spacing: .4em;
-		border-color: $w;
+	&:not([disabled]) {
+		&:hover, &:focus {
+			letter-spacing: .4em;
+			border-color: $w;
+		}
 	}
 }
 
 input, textarea {
 	display: inline-block;
 	width: 100%;
+	font-size: 70%;
 	position: relative;
 	border: 3px solid $w;
 	box-sizing: border-box;
@@ -640,11 +645,6 @@ textarea {
 	}
 }
 
-.select:not(.selectionMade)~button, .score button.inactive {
-	pointer-events: none;
-	background-color: lightgray;
-}
-
 // switches colors for dynamic items
 
 $types: (
@@ -735,6 +735,11 @@ $cD: 3px;
 	}
 }
 
+.select:not(.selectionMade)~button, button.inactive, button[disabled] {
+	pointer-events: none !important;
+	background-color: lightgray !important;
+}
+
 .cardGrid {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(20ch,1fr));
@@ -800,9 +805,9 @@ $cD: 3px;
 	}
 	footer {
 		color: #0005;
-		>* {
+		>*, #GitHubPrj {
+			margin: auto;
 			width: 100%;
-			margin: 8px 0 !important;
 		}
 	}
 }

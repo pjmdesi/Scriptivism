@@ -19,26 +19,28 @@
 	<p>This website uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage" target="_blank">localStorage</a> to store your answers. Don't clear this data if you want to keep them. This is a website for fun, so it's not a great loss if you lose your data.</p>
 	<br>
 	<p><b>Submit a Question</b></p>
-	<form id="qform" name="request-info" action="#" method="POST" netlify-honeypot="bot-field" data-netlify="true">
+	<form id="qform" class="card" name="request-info" action="#" method="POST" netlify-honeypot="bot-field" data-netlify="true">
 		<input name="bot-field" class="hidden"/>
-		<label for="EMAIL" class="hidden">Email</label>
-		<input type="email" value="" name="EMAIL" placeholder="Email" required />
 		<label for="NAME" class="hidden">Name</label>
 		<input type="text" value="" name="NAME" placeholder="Name" required />
+		<label for="EMAIL" class="hidden">Email</label>
+		<input type="email" value="" name="EMAIL" placeholder="Email" required />
 		<label for="Question" class="hidden">Your Submission</label>
 		<textarea type="text" value="" name="Question" maxlength="300" rows="3" placeholder="Include the question and both answers (limit 300 chars)" required />
-		<button type="submit" value="Send">Submit</button>
+		<button tabindex="0" type="submit" value="Send">Submit</button>
 	</form>
 	<br>
 	<p><b>Settings</b></p>
+	<p>(Desktop Only)</p>
 	<div id="settings">
-		<button id="motionToggle">Turn off motion effects</button>
-		<button id="cursorToggle">Turn off custom cursor</button>
+		<button id="motionToggle">Turn off motion</button>
+		<button id="cursorToggle">Turn off cursor</button>
 	</div>
 	<div class="spacer"></div>
 </div>
 <script type="text/javascript">
-	// console.log(mot, cur);
-	if (!mot) $('#motionToggle').html('Turn on motion effects');
-	if (!cur) $('#cursorToggle').html('Turn on custom cursor');
+	if (!mot) $('#motionToggle').html('Turn on motion');
+	if (!cur) $('#cursorToggle').html('Turn on cursor');
+	if (touch) $('#motionToggle').prop('disabled', true);
+	if (touch) $('#cursorToggle').prop('disabled', true);
 </script>

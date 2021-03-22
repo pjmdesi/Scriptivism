@@ -21,6 +21,13 @@ a, input, button, textarea {
   color: inherit;
 }
 
+/* Removes iOS weirdness */
+input[type=text], input[type=email], input[type=phone], input[type=number], textarea {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+}
+
 /* HTML5 display-role reset for older browsers */
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block; }

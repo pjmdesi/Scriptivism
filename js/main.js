@@ -26,6 +26,7 @@ let getQs = $.getJSON( "js/questions.json", function() {})
 
 // things to run when DOM is ready
 $(document).ready(function() {
+
 	// Sets link functionality
 	$('a').click(function(e) {
 		// Stops normal link functionality
@@ -35,10 +36,317 @@ $(document).ready(function() {
 	});
 
 	// Detect touchscreen device
-	detectTouch(function() {
-		// When returned, removes touch listener
-		$('html').off();
-	});
+	touch = detectTouch();
+
+	// /‾‾‾ |   | |‾‾\ /‾‾  /‾‾‾\ |‾‾\
+	// |    |   | |__/ \--\ |   | |__/
+	// \___ \___/ |  \ ___/ \___/ |  \
+
+	$('body')
+		// When mouse enters an input or textarea
+		.on('mouseenter', 'input, textarea', () => {
+			$('#cursor').addClass('inputHover');
+		})
+		// When mouse enters a link or button
+		.on('mouseenter', 'a, button', e => {
+			$('#cursor').addClass('hover');
+			if ($(e.target).attr('href')) {
+				if (!$(e.target).attr('href').indexOf('http')) {
+					$('#cursor').addClass('link');
+				}
+			}
+		})
+		// When mouse leaves an input, textarea, link, or button
+		.on('mouseleave', 'a, button, input, textarea', () => {
+			$('#cursor').removeClass('link hover mousedown mouseRefuse inputHover');
+		})
+		// When mouse clicks down on an input, textarea, link, or button
+		.on('mousedown', 'a, button, input, textarea', e => {
+			($(e.target).hasClass('active')||$(e.target).parents('a').hasClass('active'))
+				? $('#cursor').addClass('mouseRefuse')
+				: $('#cursor').addClass('mousedown');
+		})
+		// When mouse realeases click on an input, textarea, link, or button
+		.on('mouseup', 'a, button, input, textarea', () => {
+			$('#cursor').removeClass('mousedown mouseRefuse')
+		});
+
+	//   /\   |\  | /‾‾  |    | |‾‾‾ |‾‾\ /‾‾
+	//  /__\  | \ | \--\ | /\ | |--  |__/ \--\
+	// /    \ |  \| ___/ |/  \| |___ |  \ ___/
+
+	// mouse controls for select elements
+	$('main')
+		// When mouse enters a select element
+		.on('mouseenter focusin', '.select', function() {
+			openAns($(this));
+		})
+		// When mouse leaves or releases click on select element
+		.on('mouseleave focusout', '.select', function() {
+			closeAns($(this));
+		});
+
+	// Keyboard controls for select elements
+	$('main')
+		// When key is pressed down
+		.on('keydown', '.select', function(e) {
+			// console.log(e.which);
+			e.stopPropagation();
+
+			let t = $(this);
+
+			switch (e.which) {
+				// Up arrow
+				case 38:
+					openAns(t);
+					t.find('.answer').removeClass('selected');
+					t.find('.topAns').addClass('selected');
+					break;
+				// Down arrow
+				case 40:
+					openAns(t);
+					t.find('.answer').removeClass('selected');
+					t.find('.botAns').addClass('selected');
+					break;
+				// Escape
+				case 27:
+					t.find('.answer').removeClass('selected');
+					closeAns(t);
+					break;
+				// Enter
+				case 13:
+				// Space
+				case 32:
+					e.preventDefault();
+					if (t.hasClass('open') && t.find('.selected').length) {
+						closeAns(t);
+						t.nextAll('.select, .qBtn').eq(0).focus();
+					} else {
+						openAns(t);
+					}
+					break;
+				// Right arrow
+				case 39:
+					e.preventDefault();
+
+					if (t.nextAll('.select').length) {
+						if (t.hasClass('open')) {
+							closeAns(t);
+						}
+						t.nextAll('.select').eq(0)
+							.focus()
+							.addClass('open');
+					}
+					break;
+				// Left arrow
+				case 37:
+					e.preventDefault();
+
+					if (t.prevAll('.select').length) {
+						if (t.hasClass('open')) {
+							closeAns(t);
+						}
+						t.prevAll('.select').eq(0)
+							.focus()
+							.addClass('open');
+					}
+					break;
+			}
+		})
+		// When key is released
+		.on('focusout keyup', '.select', function(e) {
+			// Prevents enter key from automatically activating next button
+			if (e.which === 13) {
+				e.preventDefault();
+			}
+		});
+
+	// mouse controls answer elements
+	$('main')
+		// When mouse enters an answer element
+		.on('mouseenter', '.answer', function() {
+			$(this).siblings('.answer').removeClass('selected');
+			$(this).addClass('selected');
+			$(this).parents('.select').addClass('selectionMade');
+		})
+		.on('mouseup', '.answer', function() {
+			$(this).addClass('selected');
+			closeAns($(this).parents('.select'));
+		})
+		// When mouse moves inside an answer element (motion effects)
+		.on('mousemove', '.answer', e => {
+			if (mot) {
+				let a = $(e.target);
+
+				let s = a.parents('.select');
+
+				let x = e.pageX,
+					y = e.pageY,
+					ex = s.offset().left,
+					ey = s.offset().top,
+					ew = s.outerWidth(),
+					eh = 32,
+					diff = a.hasClass('topAns')?0:64;
+
+				let cx = ex+(ew/2),
+					cy = ey+diff+(eh/2);
+
+				let calcX = (Math.abs(x-cx)/(x-cx))*(Math.abs(x-cx)**(1/2)),
+					calcY = (Math.abs(y-cy)/(y-cy))*(Math.abs(y-cy)**(1/2));
+
+				a.css({
+					'-webkit-transform': 'translate('+calcX+'px,'+calcY+'px)',
+					'-moz-transform': 'translate('+calcX+'px,'+calcY+'px)',
+					'-ms-transform': 'translate('+calcX+'px,'+calcY+'px)',
+					'transform': 'translate('+calcX+'px,'+calcY+'px)'
+				});
+			}
+		})
+		// When mouse leaves an answer element (reset motion effects)
+		.on('mouseleave', '.answer', () => {
+			if (mot) {
+				$('.answer').css({
+					'-webkit-transform': 'translate(0px,0px)',
+					'-moz-transform': 'translate(0px,0px)',
+					'-ms-transform': 'translate(0px,0px)',
+					'transform': 'translate(0px,0px)'
+				});
+			}
+		});
+
+	$('main')
+		// When blank is clicked (clears selected answers)
+		.on('mouseup', '.blank', function() {
+			$(this).parents('.select').removeClass('selectionMade');
+			$(this).siblings('.answer').removeClass('selected');
+		});
+
+	// /‾‾‾\ ‾‾|‾‾ |   | |‾‾‾ |‾‾\
+	// |   |   |   |---| |--  |__/
+	// \___/   |   |   | |___ |  \
+
+
+	$('main')
+		// When reset score button is clicked
+		.on('click','#scoreMeter+button', () => {
+			localStorage.clear();
+			storageSetup();
+			scoreMeter();
+		})
+		// toggles settings when buttons are clicked on about page
+		.on('click', '#motionToggle', () => {
+			if (mot) {
+				localStorage.setItem('motion',0);
+				mot = 0;
+				$('main, #cursor').css({
+					'-webkit-transform': 'none',
+					'-moz-transform': 'none',
+					'-ms-transform': 'none',
+					'transform': 'none'
+				});
+				$('body').css({'box-shadow': 'none'});
+				$('#motionToggle').html('Turn on motion');
+			} else {
+				localStorage.setItem('motion',1);
+				mot = 1;
+				$('#motionToggle').html('Turn off motion');
+			}
+		})
+		.on('click', '#cursorToggle', () => {
+			if (cur) {
+				localStorage.setItem('cursor',0);
+				cur = 0;
+				$('body').removeClass('custCursOn');
+				$('#cursorToggle').html('Turn on cursor');
+			} else {
+				localStorage.setItem('cursor',1);
+				cur = 1;
+				$('body').addClass('custCursOn');
+				$('#cursorToggle').html('Turn off cursor');
+			}
+		});
+
+	// If on desktop sets cursor element to follow mouse & apply motion effects to cursor & main
+	if (!touch) {
+		// Listens for mouse movement and moves the custom cursor to the pointer position
+		$(document).bind('mousemove', e => {
+
+			// initializes variables
+			let w, h, x, y, xd, yd, mbor;
+
+			// Gets window dimensions
+			w = $(window).width();
+			h = $(window).height();
+
+			// gets position of pointer in window
+			x = e.pageX;
+			y = e.pageY;
+
+			// Sets the position of the cursor
+			if (cur) {
+				$('#cursor').css({
+					'left' : x - 3,
+					'top' : y - 3
+				});
+			}
+
+			// Sets rotation of main elements if motion effects are on
+			if (mot) {
+
+				// calculates the pointer's distance from the center using the given measurements above.
+				// Units are normalized.
+				// ie when cursor is in middle, coordinates are (0,0)
+				// when cursor is fully top-left, coordinates are (15,15)
+				yd = -(12 - 24*(x/w));
+				xd = 8 - 16*(y/h);
+
+				// Calculates the easing for the y rotation (looks like square root curve)
+				let calcY = (Math.abs(yd)/yd)*(Math.abs(yd)**(1/2));
+
+				// determines the css properties for the shadow color for the body (based on score status)
+				let shadCol = $('body').hasClass('status-meh')?'rgba(82, 0, 210, 0.15)':($('body').hasClass('status-de')?'rgba(0, 183, 226, 0.15)':'rgba(255, 0, 98, 0.15)');
+
+				// Concatonates the string for the box-shadow property of body
+				let bodyShad = String((-10*yd+'px '+10*xd+'px 180px -60px '+shadCol+' inset'));
+
+				$('main, #cursor').css({
+					'-webkit-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
+					'-moz-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
+					'-ms-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
+					'transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)'
+				});
+				// Sets the box-shadow of the body
+				$('body').css({
+					'box-shadow': bodyShad
+				});
+			}
+		});
+	} else {
+
+		// ‾‾|‾‾ /‾‾‾\ |   | /‾‾‾ |   |
+		//   |   |   | |   | |    |---|
+		//   |   \___/ \___/ \___ |   |
+
+		$('body').addClass('touch');
+
+		$('main').off();
+		$('body').off();
+
+		$('.touch')
+			.on('touchstart', '.open .answer', function() {
+				$(this).siblings('.answer').removeClass('selected');
+				$(this).addClass('selected');
+			});
+
+		$('.touch')
+			.on('touchend', '.select', function() {
+				$(this).hasClass('open')
+					? closeAns($(this))
+					: openAns($(this));
+			});
+	}
+
+
 
 	// finds & sets motion prefs based on local storage. If no local storage, adds it.
 	!localStorage.getItem('motion')
@@ -60,46 +368,7 @@ $(document).ready(function() {
 
 	// Loads the homepage
 	changePage($('#sitelogo'));
-
-	// Adds cursor functionality to a links in header/footer
-	setFanciness($('a'));
 })
-
-
-// toggles motion effects when button is clicked on about page
-$('main').on('click', '#motionToggle', () => {
-	if (mot) {
-		localStorage.setItem('motion',0);
-		mot = 0;
-		$('main, #cursor').css({
-			'-webkit-transform': 'none',
-			'-moz-transform': 'none',
-			'-ms-transform': 'none',
-			'transform': 'none'
-		});
-		$('body').css({'box-shadow': 'none'});
-		$('#motionToggle').html('Turn on motion effects');
-	} else {
-		localStorage.setItem('motion',1);
-		mot = 1;
-		$('#motionToggle').html('Turn off motion effects');
-	}
-});
-
-$('main').on('click', '#cursorToggle', () => {
-	if (cur) {
-		localStorage.setItem('cursor',0);
-		cur = 0;
-		$('body').removeClass('custCursOn');
-		$('#cursorToggle').html('Turn on custom cursor');
-	} else {
-		localStorage.setItem('cursor',1);
-		cur = 1;
-		$('body').addClass('custCursOn');
-		$('#cursorToggle').html('Turn off custom cursor');
-	}
-});
-
 
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[ Functions ]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -109,10 +378,9 @@ $('main').on('click', '#cursorToggle', () => {
 function applyTouch() {
 
 	// Remove the desktop custom cursor
-	$('#cursor').remove();
-
-	// Remove the mouse movement listener
-	$(document).unbind();
+	$('#cursor').hide();
+	localStorage.setItem('cursor',0);
+	cur = 0;
 
 	// Set content elements to remain motionless and resets their rotation to 0
 	localStorage.setItem('motion',0);
@@ -125,133 +393,17 @@ function applyTouch() {
 	});
 
 	$('body').css({'box-shadow': 'none'});
-	// console.log('touch device detected');
 }
 
 // Detects if the decive is a touchscreen device by listening for a touch input on html
-function detectTouch(callback) {
-	// console.log('detect touch');
-
-	// Adds touch listener to html to detect a touchscreen device
-	$('html').on('touchstart', function() {
-		// console.log('touch');
-		touch = true;
-
-		// Runs apply touch which turns some features on/off
-		applyTouch();
-		callback();
-	});
-
-	// Adds click listener to detect a desktop device
-	$('html').on('click', function() {
-		// console.log('click');
-		touch = false;
-		callback();
-	});
-	// Returns the touch variable as bool
-	return touch;
-}
-
-$('main').on('mouseenter', 'input, textarea', () => {
-	$('#cursor').addClass('inputHover');
-});
-
-$('main').on('mouseleave', 'input, textarea', () => {
-	$('#cursor').removeClass('inputHover');
-	$('#cursor').removeClass('mousedown');
-});
-
-$('main').on('mousedown', 'input, textarea', () => {
-	$('#cursor').addClass('mousedown');
-});
-
-$('main').on('mouseup', 'input, textarea', () => {
-	$('#cursor').removeClass('mousedown');
-});
-
-// If on desktop, sets listeners & anaimtion for desktop cursor
-function setFanciness(hoverables) {
-
-	let delay = 0,
-			c = $('#cursor');
-
-	// Sets various listeners for when cursor interacts with something
-	$(hoverables)
-		.on('mouseenter', function(e){
-			if ($(this).attr('href')) $(this).attr('href').indexOf('http')>=0?c.addClass('link'):'';
-			c.addClass('hover')
-			delay = 200;
-			setTimeout(function(){
-				delay = 0
-			}, 300)
-		})
-		.on('mouseleave', function(e){
-			c.removeClass('hover link mousedown mouseRefuse');
-		})
-		.on('mousedown', function(e){
-			($(e.target).hasClass('active')||$(e.target).parents('a').hasClass('active'))?c.addClass('mouseRefuse'):c.addClass('mousedown');
-			delay = 200;
-			setTimeout(function(){
-				delay = 0
-			}, 300)
-		})
-		.on('mouseup',function(e){
-			setTimeout(function(){
-				c.removeClass('mousedown mouseRefuse')
-			}, delay)
-		});
-
-	// Listens for mouse movement and moves the custom cursor to the pointer position
-	$(document).bind('mousemove', function(e){
-
-		// initializes variables
-		let w, h, x, y, xd, yd, mbor;
-
-		// Gets window dimensions
-		w = $(window).width();
-		h = $(window).height();
-
-		// gets position of pointer in window
-		x = e.pageX;
-		y = e.pageY;
-
-		// Sets the position of the cursor
-		$('#cursor').css({
-			'left' : x - 3,
-			'top' : y - 3
-		});
-
-		// calculates the pointer's distance from the center using the given measurements above.
-		// Units are normalized.
-		// ie when cursor is in middle, coordinates are (0,0)
-		// when cursor is fully top-left, coordinates are (15,15)
-		yd = -(12 - 24*(x/w));
-		xd = 8 - 16*(y/h);
-
-		// Calculates the easing for the y rotation (looks like square root curve)
-		let calcY = (Math.abs(yd)/yd)*(Math.abs(yd)**(1/2));
-
-		// determines the css properties for the shadow color for the body (based on score status)
-		let shadCol = $('body').hasClass('status-meh')?'rgba(82, 0, 210, 0.15)':($('body').hasClass('status-de')?'rgba(0, 183, 226, 0.15)':'rgba(255, 0, 98, 0.15)');
-
-		// Concatonates the string for the box-shadow property of body
-		let bodyShad = String((-10*yd+'px '+10*xd+'px 180px -60px '+shadCol+' inset'));
-
-		// Sets rotation of main elements
-		if (mot) {
-			$('main, #cursor').css({
-				'-webkit-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-				'-moz-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-				'-ms-transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)',
-				'transform': 'rotateX('+ xd +'deg) rotateY('+ calcY +'deg)'
-			});
-			// Sets the box-shadow of the body
-			$('body').css({
-				'box-shadow': bodyShad
-			});
-		}
-	})
-}
+function detectTouch() {
+	try {
+    document.createEvent("TouchEvent");
+    return true;
+  } catch (e) {
+    return false;
+  }
+};
 
 // Detects status of & sets up localStorage
 function storageSetup() {
@@ -298,225 +450,37 @@ function storageSetup() {
 // Opens the answer element when interacted with
 function openAns(q) {
 
-	let ans = q.find('.answer'),
-		blnk = q.find('.blank');
-
 	q.addClass('open');
-	if (touch) {
-		// Sets listeners when touch is true
-		setTimeout(function () {
-			ans
-				.on('touchstart', function() {
-					ans.removeClass('selected');
-					q.addClass('selectionMade');
-					$(this).addClass('selected');
-				})
-				.on('touchend', function() {
-					closeAns(q)
-				});
 
-			blnk.on('touchstart', function() {
-				ans.removeClass('selected');
-				q.removeClass('selectionMade');
-			});
-		}, 150);
-	} else {
-		// Sets listeners when touch is false
+	if (!touch) {
 		$('#cursor').addClass('hidden');
-
-		ans
-			.on('mouseenter', function() {
-				ans.removeClass('selected');
-				q.addClass('selectionMade');
-				$(this).addClass('selected');
-				$(this).on('mousemove', function(e) {
-					let a = $(this);
-
-					let s = a.parents('.select');
-
-					let x = e.pageX,
-						y = e.pageY,
-						ex = s.offset().left,
-						ey = s.offset().top,
-						ew = s.outerWidth(),
-						eh = 32,
-						diff = a.hasClass('topAns')?0:64;
-
-
-					let cx = ex+(ew/2),
-						cy = ey+diff+(eh/2);
-
-
-					let calcX = (Math.abs(x-cx)/(x-cx))*(Math.abs(x-cx)**(1/2)),
-						calcY = (Math.abs(y-cy)/(y-cy))*(Math.abs(y-cy)**(1/2));
-
-					// console.log(
-					// 	'mouse: '+x.toFixed(3)+' | '+y.toFixed(3)+'\n'+
-					// 	'elem: '+ex.toFixed(3)+' | '+ey.toFixed(3)+'\n'+
-					// 	'elemC: '+cx.toFixed(3)+' '+cy.toFixed(3));
-					a.css({
-						'-webkit-transform': 'translate('+calcX+'px,'+calcY+'px)',
-						'-moz-transform': 'translate('+calcX+'px,'+calcY+'px)',
-						'-ms-transform': 'translate('+calcX+'px,'+calcY+'px)',
-						'transform': 'translate('+calcX+'px,'+calcY+'px)'
-					});
-				});
-			})
-			.on('mouseleave', function(e) {
-				$(this)
-					.css({
-						'-webkit-transform': 'translate(0px,0px)',
-						'-moz-transform': 'translate(0px,0px)',
-						'-ms-transform': 'translate(0px,0px)',
-						'transform': 'translate(0px,0px)'
-					})
-					.off('mousemove');
-
-			})
-			.on('click', function() {
-				closeAns(q)
-				$(this).css({
-					'-webkit-transform': 'translate(0px,0px)',
-					'-moz-transform': 'translate(0px,0px)',
-					'-ms-transform': 'translate(0px,0px)',
-					'transform': 'translate(0px,0px)'
-				});
-			});
-
-		blnk.on('click', function() {
-			ans.removeClass('selected');
-			q.removeClass('selectionMade');
-		});
-	};
+	}
 };
 
-// Closes the answer element and removes its listeners when executed
 function closeAns(q) {
 
-	let ans = q.find('.answer'),
-		blnk = q.find('.blank');
+	q.removeClass('open');
 
+	$('#cursor').removeClass('hidden');
+
+	// Checks if an answer has been selected
 	if (q.find('.selected').length) {
+
 		q.addClass('selectionMade');
+
+		// Checks of all select elements have selected answers
 		if ($('.card').find('.select').length === $('.card').find('.selectionMade').length) {
+
+			// Enables the next button
 			$('.qBtn').prop('disabled', false);
 		}
 	} else {
+
+		// Disables the next button
 		q.removeClass('selectionMade');
 		$('.qBtn').prop('disabled', true);
 	}
-
-	q.removeClass('open');
-	$('#cursor').removeClass('hidden');
-	ans.off();
-	blnk.off();
 }
-
-// Sets interactivity listeners for elements inside main elements
-// This is executed every time main changes
-
-// When the answers elements are touched or entered into with mouse
-$('main').on(touch?'touchstart':'mouseenter focusin', '.content .card .select', function(e) {
-
-	// prevents lower element from being interacted with
-	event.stopPropagation();
-	openAns($(this));
-});
-
-$('main').on(touch?'touchstart':'click', '.content .card .select .blank', function(e) {
-	$(this).find('.selected').removeClass('selected');
-	$(this).removeClass('selectionMade');
-});
-
-$('main').on('click','#scoreMeter+button', function() {
-	localStorage.clear();
-	storageSetup();
-	scoreMeter();
-})
-
-
-$('main').on('keydown', '.content .card .select', function(e) {
-	// console.log(e.which);
-	e.stopPropagation();
-
-	let t = $(this);
-
-	switch (e.which) {
-		// Up arrow
-		case 38:
-			openAns(t);
-			t.find('.answer').removeClass('selected');
-			t.find('.topAns').addClass('selected');
-			break;
-		// Down arrow
-		case 40:
-			openAns(t);
-			t.find('.answer').removeClass('selected');
-			t.find('.botAns').addClass('selected');
-			break;
-		// Escape
-		case 27:
-			t.find('.answer').removeClass('selected');
-			closeAns(t);
-			break;
-		// Enter
-		case 13:
-		// Space
-		case 32:
-			e.preventDefault();
-			if (t.hasClass('open') && t.find('.selected').length) {
-				closeAns(t);
-				t.nextAll('.select, .qBtn').eq(0)
-					.focus()
-					.addClass('open');
-			} else {
-				openAns(t);
-			}
-			break;
-		// Right arrow
-		case 39:
-			e.preventDefault();
-
-			if (t.nextAll('.select').length) {
-				if (t.hasClass('open')) {
-					closeAns(t);
-				}
-				t.nextAll('.select').eq(0)
-					.focus()
-					.addClass('open');
-			}
-			break;
-		// Left arrow
-		case 37:
-			e.preventDefault();
-
-			if (t.prevAll('.select').length) {
-				if (t.hasClass('open')) {
-					closeAns(t);
-				}
-				t.prevAll('.select').eq(0)
-					.focus()
-					.addClass('open');
-			}
-			break;
-	}
-})
-
-// When mouse leaves answers elements
-$('main').on('mouseleave focusout keyup', '.content .card .select', function(e) {
-	if (e.which === 13) {
-		e.preventDefault();
-	} else if (!e.which) {
-		closeAns($(this));
-	}
-});
-
-function usrInteraction() {
-
-	// If touch is false, apply fanciness to button elements
-	touch?'':setFanciness($('button'));
-}
-
 
 // Animates text value containing numbers over a certain time period
 // Slightly modified from user jfriend00 on stackoverflow:
@@ -634,6 +598,12 @@ function nextQ(move=true,start=false) {
 
 	let ls = JSON.parse(localStorage.getItem('Qprogress'));
 
+	if (start) {
+		$('a').removeClass('active');
+		$('main').removeClass('home');
+		$('main').addClass('quiz');
+	}
+
 	// Generate random integer to select from list of questions
 	let randQ = Math.floor((Math.random()*Object.keys(questList).length)+1);
 
@@ -650,7 +620,7 @@ function nextQ(move=true,start=false) {
 		}
 	} else {
 		// randQ IS NOT in users Qs, generate next card
-		let cont = $('#main .content').eq(0);
+		let cont = $('main .content').eq(0);
 
 		let lastQ = Object.keys(questList).length==ls.QIDs.length+1;
 
@@ -729,8 +699,6 @@ function nextQ(move=true,start=false) {
 			setTimeout(function () {
 				cont.remove();
 				conts.css('left', '0%');
-				usrInteraction();
-				// console.log(ls);
 			}, 550);
 		}
 	}
@@ -782,7 +750,7 @@ function recordQ() {
 
 let changePage = (lnk) => {
 
-	let main = $('#main');
+	let main = $('main');
 
 	l = lnk.attr('href');
 
@@ -800,7 +768,7 @@ let changePage = (lnk) => {
 		if (!lnk.hasClass('active')) {
 			// Toggles class for clicked lick
 			$('a').removeClass('active');
-			lnk.addClass('active');
+			$(`a[href=${l}]`).addClass('active');
 		}
 
 		let t = 500;
@@ -823,9 +791,7 @@ let changePage = (lnk) => {
 					}
 					main.animate({top: 0, opacity: 1}, t, 'easeOutCubic');
 					main.removeClass();
-					main.addClass(l)
-					usrInteraction();
-					setFanciness();
+					main.addClass(l);
 				});
 			});
 		});
