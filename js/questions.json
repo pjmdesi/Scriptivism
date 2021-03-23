@@ -107,10 +107,10 @@
 			"name": "oxford camma 1",
 			"text1": "It isn't enough to feed them. You have to massage them, clean them",
 			"option1": {
-				"pre": ", and ",
-				"de": " and "
+				"pre": " , and",
+				"de": " and"
 			},
-			"text2": "keep them happy.",
+			"text2": " keep them happy.",
 			"rule": "https://www.grammarly.com/blog/what-is-the-oxford-comma-and-why-do-people-care-so-much-about-it/"
 		},
 		"q10": {
@@ -218,6 +218,18 @@
 			},
 			"text2": ", I'm going to move on to my next topic.",
 			"rule": "https://www.dictionary.com/e/anyway-vs-anyways-vs-any-way/"
+		},
+		"q19" : {
+			"ID": "19",
+			"diff": 2,
+			"name": "oxford camma 2",
+			"text1": "I want to have dinner with my uncles, Crumpets ",
+			"option1": {
+				"pre":", and",
+				"de":"and"
+			},
+			"text2": " Pims",
+			"rule": "https://www.grammarly.com/blog/what-is-the-oxford-comma-and-why-do-people-care-so-much-about-it/"
 		}
 	}
 }

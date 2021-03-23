@@ -1,12 +1,16 @@
 <div class="content">
+	<div id="scoreSpacer"></div>
+	<p id="encouragment">Encouragment</p>
+	<div class="spacer"></div>
 	<div id="scoreMeter">
 		<div class="bar deBar"></div>
 		<div class="bar mehBar"></div>
 		<div class="bar preBar"></div>
-		<div id="indicator" style="display:none;"><p id="indicatorVal">0</p></div>
-		<script type="text/javascript">
-			scoreMeter();
-		</script>
+		<div id="indicator" style="display:none;"><p id="indicatorVal">0</p><p>/</p><p id="qNum">0</p></div>
 	</div>
 	<button type="button" disabled name="button">reset score</button>
+	<div id="scoreHist"></div>
+	<script type="text/javascript">
+		scoreMeter();
+	</script>
 </div>
