@@ -38,8 +38,11 @@
 	<p>(Desktop Only)</p>
 	<div id="settings">
 		<button id="motionToggle">Turn off motion</button>
-		<button id="perspectiveSetting">Intensity</button>
+		<button id="perspectiveSetting">Tilt</button>
 		<button id="cursorToggle">Turn off cursor</button>
+		<div class="gridSpacer"></div>
+		<button id="soundToggle">Turn off Sound</button>
+		<!-- <button id="volumeSetting"></button> -->
 	</div>
 	<div class="spacer"></div>
 	<p>This website uses <a href="https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage" target="_blank">localStorage</a> to store your answers, the last page you were on, and the above settings. I do not collect any data whatsoever from visitors to this website.</p>
@@ -49,6 +52,7 @@
 	<p><a href="https://stackoverflow.com/a/16994725/7308144">stackoverflow</a></p>
 	<p><a href="https://meyerweb.com/eric/tools/css/reset/">reset.css</a></p>
 	<p><a href="https://fonts.google.com/specimen/Roboto">Roboto</a></p>
+	<p><a href="https://freesound.org/people/acclivity/sounds/19991/">freesound</a></p>
 	<div class="spacer"></div>
 </div>
 <script type="text/javascript">
@@ -61,9 +65,10 @@
 		perspectiveSet($('#perspectiveSetting'));
 	}
 	if (!cur) $('#cursorToggle').html('Turn on cursor');
-	if (touch) {
+	if (touch || mediaQuery.matches) {
 		$('#motionToggle').prop('disabled', true);
 		$('#cursorToggle').prop('disabled', true);
 		$('#perspectiveSetting').prop('disabled', true);
 	}
+	if (!snd) $('#soundToggle').html('Turn on sound');
 </script>

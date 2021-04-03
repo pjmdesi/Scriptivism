@@ -7,11 +7,28 @@ $pre: #FF0062;
 
 $bounce: cubic-bezier(0.4, 0, 0.5, 1.75);
 
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    -webkit-animation-delay: -1ms !important;
+            animation-delay: -1ms !important;
+    -webkit-animation-duration: 1ms !important;
+            animation-duration: 1ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+            animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+		perspective: 100000px !important;
+		transform: none !important;
+  }
+}
+
 body {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	font-family: 'Roboto',sans-serif;
+	font-family: 'Open Sans',sans-serif;
 	font-size: clamp(18px,3vmin,24px);
 	line-height: clamp(22px,calc(3vmin + 4px),30px);
 	background-color: darken($w, 10%);
@@ -26,6 +43,7 @@ body {
 			color: rgba($b, 0.4);
 		}
 	}
+	// Turns off animations if reduced motion is set
 	&.noMotion {
 		box-shadow: none;
 		* {
@@ -88,6 +106,7 @@ header {
 		line-height: 20px;
 		font-weight: 400;
 		p {
+			margin: auto;
 			margin-bottom: 0px;
 		}
 		#statusCont {
@@ -322,12 +341,12 @@ footer {
 	&.inputHover {
 		width: 0;
 		height: 20px;
-		margin: 0;
+		margin: -10px 0;
 		border-radius: 4px;
 		transition-duration: .1s;
 		&.mousedown {
 			border-width: 1px;
-			margin: 2px;
+			margin: -8px 2px;
 		}
 	}
 	&.hidden {
@@ -364,16 +383,17 @@ footer {
 
 #perspectiveSetting {
 	// grid-column: span 2;
-	transition: margin-bottom .17s $bounce, margin-top .17s $bounce, font-size .17s $bounce;
+	transition: letter-spacing .3s $bounce, margin-bottom .17s $bounce, margin-top .17s $bounce, font-size .17s $bounce;
 	display: block;
 	position: relative;
 	margin-top: 0px;
 	margin-bottom: 0px;
-	letter-spacing: .2em !important;
+	// letter-spacing: .2em !important;
 	&.clicked, &:focus {
 		font-size: 125%;
 		margin-top: -50px;
 		margin-bottom: -50px;
+		letter-spacing: .2em;
 	}
 	&[disabled] {
 		box-shadow: none !important;
@@ -382,22 +402,10 @@ footer {
 
 a {
 	font-weight: 700;
-	transition: bottom .3s ease, background-color .3s, color .3s, letter-spacing .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), box-shadow .3s ease;
+	transition: bottom .3s ease, background-color .3s, color .3s, box-shadow .3s ease;
 	cursor: pointer;
-	&:hover, &:focus {
-		letter-spacing: .125em;
-	}
 	&[href^="https"] {
 		cursor: ne-resize;
-	}
-	#menu & {
-		letter-spacing: .175em;
-		&:active, &.active {
-			letter-spacing: .25em;
-		}
-		&:hover, &:focus {
-			letter-spacing: .35em;
-		}
 	}
 	main & {
 		text-decoration: underline;
@@ -457,11 +465,18 @@ p {
 	text-shadow: 0 2px 4px rgba($pre, .3);
 }
 
-.spacer {
+.spacer, .gridSpacer {
 	display: block;
 	position: relative;
 	width: 100%;
+}
+
+.spacer {
 	height: 50px;
+}
+
+.gridSpacer {
+	height: 100%;
 }
 
 .hidden {
@@ -492,6 +507,7 @@ svg {
 	overflow: visible;
 	.answer, .blank {
 		position: relative;
+		cursor: pointer;
 		box-sizing: border-box;
 		top: -$ansH;
 		height: $ansH;
@@ -581,15 +597,15 @@ input, textarea {
 	&::-webkit-input-placeholder {
 		color: rgba($b, .5);
 		letter-spacing: 0;
-		-webkit-transition: border-color .3s, color .3s, font-weight .3s, letter-spacing .3s ease;
-		transition: border-color .3s, color .3s, font-weight .3s, letter-spacing .3s ease;
+		-webkit-transition: border-color .3s, color .3s;
+		transition: border-color .3s, color .3s;
 	}
 	&:focus::-webkit-input-placeholder {
 		color: rgba($b, .25);
 	}
 	&:not(:focus):hover::-webkit-input-placeholder {
 		font-weight: 700;
-		letter-spacing: .1em;
+		letter-spacing: -.0335em;
 	}
 }
 
@@ -693,18 +709,34 @@ textarea {
 			font-weight: 900;
 			line-height: 19px;
 			top: -36px;
-			left: -25px;
-			width: 50px;
+			left: -35px;
+			width: 70px;
 			text-align: center;
 			transition: color .5s;
+			&:before, &:after {
+				position: relative;
+				font-size: 50%;
+				letter-spacing: -.02em;
+				font-weight: 700;
+				color: lighten(black, 40%);
+			}
 		}
 		#indicatorVal {
 			text-align: right;
-			left: calc(-3ch - 23px);
+			left: calc(-3ch - 42px);
+			&:before {
+				content: 'Answered';
+				margin-right: 3px;
+				top: -7px;
+			}
 		}
 		#qNum {
 			text-align: left;
-			left: calc(3ch - 27px);
+			left: calc(3ch - 30px);
+			&:after {
+				content: 'questions';
+				margin-left: 3px;
+			}
 		}
 	}
 }

@@ -2,14 +2,23 @@
 // [[[[[[[[[[[[[[[[[[[[[[[[[[ Variable Initialization ]]]]]]]]]]]]]]]]]]]]]]]]]]
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
 
+// Checks to see if user has reduced motion preference setting in browser
 const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 
 let touch = false,
 	mot = mediaQuery.matches?0:1,
 	cur = 1,
 	per = .501,
+	snd = 1,
+	unlockedAudio = 0,
 	currentLoc = '',
 	scoreMeterVal= [0,0];
+
+let mdnSound,
+		invSound,
+		mupSound,
+		hovSound,
+		unkSound;
 
 const lsVersion = 0.3;
 
@@ -20,7 +29,7 @@ let getQs = $.getJSON( "js/questions.json", function() {})
 	})
 	.fail( function(d, textStatus, error) {
 		console.error("getJSON for questions.json failed, status: " + textStatus + ", error: "+error)
-	})
+	});
 
 
 // [[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[[|]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]]
@@ -43,6 +52,10 @@ $(document).ready(function() {
 		? localStorage.setItem('perspective', per)
 		: per = parseInt(localStorage.getItem('perspective'));
 
+	!localStorage.getItem('sound')
+		? localStorage.setItem('sound', snd)
+		: snd = parseInt(localStorage.getItem('sound'));
+
 	// Sets link functionality
 	$('body').on('click', 'a', function(e) {
 		// Stops normal link functionality
@@ -58,6 +71,19 @@ $(document).ready(function() {
 		e.target.blur();
 	});
 
+	// Unlocks the audio permission when user touches or clicks body
+	$('html').on('mousedown touchstart', !unlockedAudio?unlockAudio:'');
+
+
+	// /‾‾  /‾‾‾\ |   | |\  | |‾‾‾\
+	// \--\ |   | |   | | \ | |   |
+	// ___/ \___/ \___/ |  \| |___/
+
+	mdnSound = new Audio('/audio/glug-mousedown.mp3'),
+	invSound = new Audio('/audio/glug-invalid.mp3'),
+	mupSound = new Audio('/audio/glug-mouseout-mouseup.mp3'),
+	hovSound = new Audio('/audio/glug-mouseover.mp3'),
+	unkSound = new Audio('/audio/glug-unknown.mp3');
 
 	// Detect touchscreen device
 	touch = detectTouch();
@@ -70,10 +96,12 @@ $(document).ready(function() {
 		// When mouse enters an input or textarea
 		.on('mouseenter', 'input, textarea', () => {
 			$('#cursor').addClass('inputHover');
+			if (snd && unlockedAudio) hovSound.play();
 		})
 		// When mouse enters a link or button
 		.on('mouseenter', 'a, button', e => {
 			$('#cursor').addClass('hover');
+			if (snd && unlockedAudio) hovSound.play();
 			if ($(e.target).attr('href')) {
 				if (!$(e.target).attr('href').indexOf('http')) {
 					$('#cursor').addClass('link');
@@ -83,16 +111,23 @@ $(document).ready(function() {
 		// When mouse leaves an input, textarea, link, or button
 		.on('mouseleave', 'a, button, input, textarea', () => {
 			$('#cursor').removeClass('link hover mousedown mouseRefuse inputHover');
+			if (snd && unlockedAudio) mupSound.play();
 		})
 		// When mouse clicks down on an input, textarea, link, or button
 		.on('mousedown', 'a, button, input, textarea', e => {
-			($(e.target).hasClass('active')||$(e.target).parents('a').hasClass('active'))
-				? $('#cursor').addClass('mouseRefuse')
-				: $('#cursor').addClass('mousedown');
+			// If the LINK in the menu has the class of 'active', is in: it's the current page
+			if ($(e.target).hasClass('active')||$(e.target).parents('a').hasClass('active')) {
+				$('#cursor').addClass('mouseRefuse');
+				if (snd && unlockedAudio) invSound.play();
+			} else {
+				$('#cursor').addClass('mousedown');
+				if (snd && unlockedAudio) mdnSound.play();
+			}
 		})
 		// When mouse realeases click on an input, textarea, link, or button
 		.on('mouseup', 'a, button, input, textarea', () => {
 			$('#cursor').removeClass('mousedown mouseRefuse')
+			if (snd && unlockedAudio) mupSound.play();
 		});
 
 	$('header, footer')
@@ -117,10 +152,12 @@ $(document).ready(function() {
 		})
 		.on('focusin', '.select', function() {
 			openAns($(this));
+			if (snd && unlockedAudio) hovSound.play();
 		})
 		// When mouse leaves or releases click on select element
 		.on('mouseleave focusout', '.select', function() {
 			closeAns($(this));
+			if (snd && unlockedAudio) mupSound.play();
 		});
 
 	// Keyboard controls for select elements
@@ -242,10 +279,10 @@ $(document).ready(function() {
 					calcY = (Math.abs(y-cy)/(y-cy))*(Math.abs(y-cy)**(1/2));
 
 				a.css({
-					'-webkit-transform': 'translate('+per*calcX+'px,'+per*calcY+'px)',
-					'-moz-transform': 'translate('+per*calcX+'px,'+per*calcY+'px)',
-					'-ms-transform': 'translate('+per*calcX+'px,'+per*calcY+'px)',
-					'transform': 'translate('+per*calcX+'px,'+per*calcY+'px)'
+					'-webkit-transform': 'translate('+calcX+'px,'+calcY+'px)',
+					'-moz-transform': 'translate('+calcX+'px,'+calcY+'px)',
+					'-ms-transform': 'translate('+calcX+'px,'+calcY+'px)',
+					'transform': 'translate('+calcX+'px,'+calcY+'px)'
 				});
 			}
 		})
@@ -267,6 +304,12 @@ $(document).ready(function() {
 			$(this).parents('.select').removeClass('selectionMade');
 			$(this).siblings('.answer').removeClass('selected');
 		});
+
+	$('main').on('mouseup', '.qBtn', e => {
+		if ($(e.target).prop('disabled') || !$(e.target).parents('.selectionMade').length) {
+			recordQ();
+		}
+	})
 
 	// If on desktop sets cursor element to follow mouse & apply motion effects to cursor & main
 	if (!touch) {
@@ -372,6 +415,7 @@ $(document).ready(function() {
 			localStorage.removeItem('Qprogress');
 			storageSetup();
 			scoreMeter();
+			$('#cursor').removeClass('hover');
 		})
 		// toggles settings when buttons are clicked on about page
 		.on('click', '#motionToggle', () => {
@@ -409,7 +453,18 @@ $(document).ready(function() {
 				$('#cursorToggle').html('Turn off cursor');
 			}
 		})
-		// Sets the perspective to change the intensity of the motion
+		.on('click', '#soundToggle', () => {
+			if (snd) {
+				localStorage.setItem('sound',0);
+				snd = 0;
+				$('#soundToggle').html('Turn on sound');
+			} else {
+				localStorage.setItem('sound',1);
+				snd = 1;
+				$('#soundToggle').html('Turn off sound');
+			}
+		})
+		// Sets the perspective to change the Tilt of the motion
 		.on('mousedown', '#perspectiveSetting', e => {
 			$('#cursor').addClass('hidden');
 			let btn = $(e.target);
@@ -476,7 +531,7 @@ $(document).ready(function() {
 		.on('keyup', '#perspectiveSetting', function(e) {
 			e.preventDefault();
 			e.stopPropagation();
-		})
+		});
 
 	if (!cur || touch) {
 		$('body').removeClass('custCursOn');
@@ -569,6 +624,21 @@ function storageSetup() {
 
 			localStorage.setItem('Qprogress',JSON.stringify(newStor));
 		}
+	}
+}
+
+function unlockAudio() {
+	if (snd) {
+		let unlockSound = new Audio('/audio/_blank.mp3');
+
+		// console.log('audio');
+
+		unlockSound.play();
+		unlockSound.currentTime = 0;
+
+		unlockedAudio = 1;
+
+		$('html').off('mouseover touchstart', unlockAudio);
 	}
 }
 
@@ -723,6 +793,8 @@ function scoreMeter() {
 
 		// Sets the current position & no. of quesitons to be used next time score is visited
 		scoreMeterVal = [pos,qs];
+
+		$('#encouragement').html('I&apos;m loaded');
 	}, 300);
 }
 
@@ -751,7 +823,7 @@ function perspectiveSet(e,x=(localStorage.getItem('perspective') || per),delta=0
 	per = parseFloat((Math.max(Math.min(clamped,1),0)).toFixed(2));
 
 	e
-		.html('Intensity: '+parseInt(per*100)+'%')
+		.html('Tilt: '+parseInt(per*100)+'%')
 		.css({
 			'box-shadow': shad + 'px 0 0 0 black inset'
 		});
@@ -823,7 +895,7 @@ function nextQ(move=true,start=false) {
 				'</div><div class="blank">×</div><div name="'+('a-'+(randNo+randP[1]))+
 				'" class="answer botAns">'+cardInfo.q2AnsBot+
 				'</div></div><span>'+cardInfo.qText3+
-				'</span><button disabled class="qBtn full-width" onclick="recordQ()">'+(lastQ?'See Your Score':'Next')+
+				'</span><button disabled class="qBtn full-width">'+(lastQ?'See Your Score':'Next')+
 				'</button><p class="qRule"><a target="_blank" href="'+cardInfo.qRule+'">More Info</a></p></div></div>';
 				cont.after(nextCard);
 
@@ -848,7 +920,7 @@ function nextQ(move=true,start=false) {
 				'</div><div class="blank">×</div><div name="'+('a-'+(randNo+randP[0]))+
 				'" class="answer botAns">'+cardInfo.qAnsBot+
 				'</div></div><span>'+cardInfo.qText2+
-				'</span><button class="qBtn full-width" onclick="recordQ()">'+(lastQ?'See Your Score':'Next')+
+				'</span><button class="qBtn full-width">'+(lastQ?'See Your Score':'Next')+
 				'</button><p class="qRule"><a target="_blank" href="'+cardInfo.qRule+'">More Info</a></p></div></div>';
 				cont.after(nextCard);
 
@@ -978,7 +1050,7 @@ let changePage = (l='home', hist=true) => {
 					if (status == 'error') {
 						main.load('404.html', function(response, status) {
 							if (status == 'error') {
-								$('main').html('<p>Something went really wrong here. Try refreshing or clearing your localStorage.</p>');
+								$('main').html('<div id="404" class="content"><div class="card"><p class="qInfo">That&apos;s a 404...</p><p>Sorry, that didn&apos;t work</p><a href="home" id="dat404">Go Home</a><!-- <button id="refreshButton">Or Try Refreshing</button> --></div></div>');
 							}
 							main.removeClass();
 							main.addClass('fourOhfour');

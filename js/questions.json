@@ -4,7 +4,7 @@
 			"ID": "1",
 			"diff": 1,
 			"name": "Anyway",
-			"text1": "My laptop battery was dying, but I decided run Crysis ",
+			"text1": "My laptop battery was dying, but I ran Crysis ",
 			"option1": {
 				"pre": "anyway",
 				"de": "anyways"
@@ -123,7 +123,7 @@
 				"de": "me"
 			},
 			"text2": " won't make it out of here.",
-			"rule": "http://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
+			"rule": "https://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
 		},
 		"q11": {
 			"ID": "11",
@@ -135,7 +135,7 @@
 				"de": "me"
 			},
 			"text2": " to the park twice a week.",
-			"rule": "http://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
+			"rule": "https://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
 		},
 		"q12": {
 			"ID": "12",
@@ -147,7 +147,7 @@
 				"de": "I"
 			},
 			"text2": " after they found out about the mess we had made.",
-			"rule": "http://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
+			"rule": "https://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
 		},
 		"q13": {
 			"ID": "13",
@@ -195,7 +195,7 @@
 				"de": "myself"
 			},
 			"text2": " and move on.",
-			"rule": "http://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
+			"rule": "https://www.englishteachermelanie.com/english-grammar-i-me-myself-and-my/"
 		},
 		"q17": {
 			"ID": "17",
