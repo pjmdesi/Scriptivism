@@ -305,7 +305,7 @@ $(document).ready(function() {
 			$(this).siblings('.answer').removeClass('selected');
 		});
 
-	$('main').on('mouseup', '.qBtn', e => {
+	$('main').on('mouseup touchend', '.qBtn', e => {
 		if ($(e.target).prop('disabled') || !$(e.target).parents('.selectionMade').length) {
 			recordQ();
 		}
@@ -453,7 +453,7 @@ $(document).ready(function() {
 				$('#cursorToggle').html('Turn off cursor');
 			}
 		})
-		.on('click', '#soundToggle', () => {
+		.on('click touch', '#soundToggle', () => {
 			if (snd) {
 				localStorage.setItem('sound',0);
 				snd = 0;
