@@ -1,15 +1,24 @@
 <div class="content">
-	<div id="scoreSpacer"></div>
+	<div class="scoreSpacer"></div>
 	<p id="encouragement">encouragement</p>
 	<div class="spacer"></div>
 	<div id="scoreMeter">
 		<div class="bar deBar"></div>
 		<div class="bar mehBar"></div>
 		<div class="bar preBar"></div>
-		<div id="indicator" style="display:none;"><p id="indicatorVal">0</p><p>/</p><p id="qNum">0</p></div>
+		<div id="indicator" style="display:none;">
+			<p id="indicatorVal">0</p>
+			<p>/</p>
+			<p id="qNum">0</p>
+		</div>
 	</div>
-	<button type="button" disabled name="button">reset score</button>
-	<div id="scoreHist"></div>
+	<div class="spacer"></div>
+	<button id="scoreReset">reset score</button>
+	<div class="scoreSpacer"></div>
+	<div id="scoreCount" class="hidden"><span class="de" id="deCardNo">0</span><b>Your Answers</b><span class="pre" id="preCardNo">0</span></div>
+	<div class="spacer"></div>
+	<div id="scoreHist">
+	</div>
 	<script type="text/javascript">
 		scoreMeter();
 	</script>

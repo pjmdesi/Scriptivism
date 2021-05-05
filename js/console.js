@@ -1,4 +1,4 @@
-console.log('Made from scratch on  Mac');
+console.log('Built with  Mac');
 console.log(`%c Designed by: https://pjm.design
   /‾‾‾‾‾‾‾\\
  /         \\

@@ -8,79 +8,97 @@ $pre: #FF0062;
 $bounce: cubic-bezier(0.4, 0, 0.5, 1.75);
 
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
-    -webkit-animation-delay: -1ms !important;
-            animation-delay: -1ms !important;
-    -webkit-animation-duration: 1ms !important;
-            animation-duration: 1ms !important;
-    -webkit-animation-iteration-count: 1 !important;
-            animation-iteration-count: 1 !important;
-    background-attachment: initial !important;
-    scroll-behavior: auto !important;
-    transition-duration: 0s !important;
-    transition-delay: 0s !important;
+	*,
+	::after,
+	::before {
+		-webkit-animation-delay: -1ms !important;
+		animation-delay: -1ms !important;
+		-webkit-animation-duration: 1ms !important;
+		animation-duration: 1ms !important;
+		-webkit-animation-iteration-count: 1 !important;
+		animation-iteration-count: 1 !important;
+		background-attachment: initial !important;
+		scroll-behavior: auto !important;
+		transition-duration: 0s !important;
+		transition-delay: 0s !important;
 		perspective: 100000px !important;
 		transform: none !important;
-  }
+	}
+}
+
+body.noMotion {
+	*,
+	::after,
+	::before {
+		-webkit-animation-delay: -1ms !important;
+		animation-delay: -1ms !important;
+		-webkit-animation-duration: 1ms !important;
+		animation-duration: 1ms !important;
+		-webkit-animation-iteration-count: 1 !important;
+		animation-iteration-count: 1 !important;
+		background-attachment: initial !important;
+		scroll-behavior: auto !important;
+		transition-duration: 0s !important;
+		transition-delay: 0s !important;
+		perspective: 100000px !important;
+		transform: none !important;
+	}
 }
 
 body {
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;
-	font-family: 'Open Sans',sans-serif;
+	font-family: "Open Sans",sans-serif;
 	font-size: clamp(18px,3vmin,24px);
 	line-height: clamp(22px,calc(3vmin + 4px),30px);
 	background-color: darken($w, 10%);
 	height: 100vh;
 	width: 100vw;
-	perspective: 1000px;
+	perspective: 4000px;
+
 	&.touch {
+		box-shadow: none !important;
+
 		.blank {
 			color: transparent !important;
 		}
+
 		footer a {
 			color: rgba($b, 0.4);
 		}
 	}
 	// Turns off animations if reduced motion is set
 	&.noMotion {
-		box-shadow: none;
-		* {
-			transition: none !important;
-		}
-		*:placeholder {
-			transition: none !important;
-		}
+		box-shadow: none !important;
 	}
 }
 
 body.custCursOn {
 	cursor: none !important;
+
 	#cursor {
 		display: block !important;
 	}
+
 	* {
 		cursor: none !important;
 	}
 }
 
-// ::-webkit-scrollbar {
-// 	display: none;
-// }
-
-header, footer {
+footer,
+header {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-	gap: 0;
+	gap: 12px;
+	background-color: darken($w, 10%);
 	align-items: center;
-
 	justify-items: stretch;
-
 	width: 100%;
-	box-shadow: 0 0 0 1px rgba($b, .25);
+	box-shadow: 0 0 0 1px rgba($b, .15);
 	padding: clamp(5px,2vmin,20px);
 	box-sizing: border-box;
+	transform: translateZ(1px);
 }
 
 header {
@@ -88,33 +106,41 @@ header {
 		display: flex;
 		position: relative;
 		justify-content: center;
+		width: 200px;
+		margin: auto;
 		top: 4px;
 		height: 36px;
 		transform: scale(1);
-		transition: transform .3s $bounce;
-		&:hover, &:focus {
+		transition: transform 0.3s $bounce;
+
+		&:focus,
+		&:hover {
 			transform: scale(1.1);
 		}
+
 		&:active {
 			transform: scale(1.05);
 		}
 	}
+
 	#scriptStatus {
 		text-align: center;
 		display: block;
 		font-size: 75%;
 		line-height: 20px;
 		font-weight: 400;
+
 		p {
-			margin: auto;
-			margin-bottom: 0px;
+			margin: auto auto 0;
 		}
+
 		#statusCont {
 			display: flex;
 			vertical-align: top;
 			justify-content: center;
 			margin-right: 18px;
 			height: 30px;
+
 			#statusGraphic {
 				height: 100%;
 				width: 56px;
@@ -123,22 +149,27 @@ header {
 				display: flex;
 				flex-wrap: wrap;
 				justify-content: flex-end;
+
 				#De {
 					fill: $de;
 				}
+
 				#Meh {
 					fill: $meh;
 				}
+
 				#Pre {
 					fill: $pre;
 				}
+
 				svg {
 					height: 24px;
 					position: relative;
-					transition: bottom .3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), fill .15s;
+					transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.27499), fill 0.15s;
 					margin: 2px 0;
 				}
 			}
+
 			#statusBase {
 				position: relative;
 				top: 3px;
@@ -147,14 +178,16 @@ header {
 			}
 		}
 	}
+
 	#menu {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		font-size: 75%;
 		font-weight: 900;
-		letter-spacing: .1em;
+		letter-spacing: 0.1em;
 		text-transform: uppercase;
+
 		a {
 			display: inline-block;
 			text-align: center;
@@ -166,13 +199,16 @@ header {
 main {
 	display: flex;
 	flex-wrap: nowrap;
-	&.about {
+
+	&.about,
+	&.score {
 		align-items: flex-start;
 	}
 	justify-content: flex-start;
 	align-items: center;
 	width: 100vw;
 	overflow-y: scroll;
+
 	.content {
 		display: flex;
 		flex-direction: column;
@@ -184,15 +220,18 @@ main {
 		box-sizing: border-box;
 		padding: 50px;
 		overflow-y: visible;
+
 		&#startScreen {
 			text-align: center;
 		}
+
 		.card {
 			position: relative;
 			border-radius: 22px;
 			padding: 13px;
 			max-width: 720px;
-			transition: box-shadow .3s;
+			transition: box-shadow 0.3s;
+
 			.qInfo {
 				width: 100%;
 				position: relative;
@@ -200,28 +239,25 @@ main {
 				color: rgba($b, 0.4);
 				margin-bottom: 8px;
 			}
+
 			.qRule {
 				text-align: center;
+				color: rgba($b, 0.4);
 				margin: 8px auto 0;
 				width: 100%;
+
 				a {
 					font-size: 60%;
 					line-height: 24px;
-					color: rgba($b, 0.4);
 					text-decoration-thickness: 2px;
 				}
 			}
+
 			button {
 				margin-top: 16px;
 			}
 		}
 	}
-}
-
-#scoreSpacer, #scoreHist {
-	display: block;
-	width: 100%;
-	min-height: 30vh;
 }
 
 footer {
@@ -230,7 +266,8 @@ footer {
 	text-align: center;
 	box-sizing: border-box;
 	border-bottom: 5px solid $b;
-	transition: border-bottom-color .3s;
+	transition: border-bottom-color 0.3s;
+
 	#credits {
 		justify-self: center;
 
@@ -245,26 +282,28 @@ footer {
 		box-sizing: border-box;
 		height: 48px;
 		width: 48px;
-		bottom: 0px;
+		bottom: 0;
 		margin: 0 10px;
 		z-index: 9;
+
 		svg {
 			height: 32px;
-			transition: fill .3s;
+			transition: fill 0.3s;
 		}
-		&:hover, &:focus {
+
+		&:focus,
+		&:hover {
 			bottom: 5px;
 			box-shadow: 0 5px 25px rgba(red, .4);
+
 			svg {
 				fill: red;
-				-webkit-filter: drop-shadow( 0px 0px 4px rgba(red, .4));
+				-webkit-filter: drop-shadow(0px 0px 4px rgba(red, .4));
 			}
 		}
 	}
-	#GitHubPrj {
-		margin-right: 108px;
-	}
-	#socialMedia a{
+
+	#socialMedia a {
 		margin: 0 8px;
 	}
 }
@@ -283,13 +322,15 @@ footer {
 	border: 3px solid $meh;
 	border-radius: 51px;
 	z-index: 999;
-	transition: width .2s $bounce, height .2s $bounce, margin .2s $bounce, border-color .2s, border-width .2s, border-radius .2s $bounce, -webkit-backdrop-filter .2s, backdrop-filter .2s;
+	transition: width 0.2s $bounce, height 0.2s $bounce, margin 0.2s $bounce, border-color 0.2s, border-width 0.2s, border-radius 0.2s $bounce, -webkit-backdrop-filter 0.2s, backdrop-filter 0.2s;
+
 	&.noTransform {
-		transform: none !important;
+		transform: rotate(0deg) translateZ(2px) !important;
 	}
+
 	&:after {
-		content: ' ';
-		font-size: 0px;
+		content: " ";
+		font-size: 0;
 		font-weight: 900;
 		line-height: 64px;
 		width: 100%;
@@ -298,31 +339,50 @@ footer {
 		vertical-align: middle;
 		position: absolute;
 		color: transparent;
-		transition: color .17s, line-height .17s $bounce, font-size .17s ease;
+		transition: color 0.17s, line-height 0.17s $bounce, font-size 0.17s ease;
 	}
+
+	&.inputHover:not(.link):not(.hover) {
+		width: 0;
+		height: 20px;
+		margin: -10px 0;
+		border-radius: 4px;
+		transition-duration: 0.1s;
+
+		&.mousedown {
+			border-width: 1px;
+			margin: -8px 2px;
+		}
+	}
+
 	&.hover {
 		-webkit-backdrop-filter: blur(5px);
 		backdrop-filter: blur(5px);
 		width: 48px;
 		height: 48px;
 		margin: -24px;
+
 		&.link:after {
-			content: '↗';
+			content: "↗";
 			font-size: 36px;
 			line-height: 50px;
 		}
 	}
+
 	&.mousedown {
 		-webkit-backdrop-filter: blur(5px);
 		backdrop-filter: blur(5px);
 		width: 32px;
 		height: 32px;
 		margin: -16px;
-		&:after, &.link:after {
+
+		&.link:after,
+		&:after {
 			font-size: 24px;
 			line-height: 34px;
 		}
 	}
+
 	&.mouseRefuse {
 		-webkit-backdrop-filter: blur(5px);
 		backdrop-filter: blur(5px);
@@ -330,30 +390,21 @@ footer {
 		height: 44px;
 		margin: -22px;
 		border-color: $b !important;
+
 		&:after {
-			content: '×';
+			content: "×";
 			color: $b !important;
 			font-size: 24px;
 			color: $b;
 			line-height: 44px;
 		}
 	}
-	&.inputHover {
-		width: 0;
-		height: 20px;
-		margin: -10px 0;
-		border-radius: 4px;
-		transition-duration: .1s;
-		&.mousedown {
-			border-width: 1px;
-			margin: -8px 2px;
-		}
-	}
+
 	&.hidden {
-		border-width: 0px;
-		margin: 0px;
-		width: 0px;
-		height: 0px;
+		border-width: 0;
+		margin: 0;
+		width: 0;
+		height: 0;
 		-webkit-backdrop-filter: blur(0px);
 		backdrop-filter: blur(0px);
 	}
@@ -367,7 +418,9 @@ footer {
 
 	width: 100%;
 	max-width: 600px;
-	textarea, button {
+
+	button,
+	textarea {
 		grid-column: span 2;
 	}
 }
@@ -383,18 +436,20 @@ footer {
 
 #perspectiveSetting {
 	// grid-column: span 2;
-	transition: letter-spacing .3s $bounce, margin-bottom .17s $bounce, margin-top .17s $bounce, font-size .17s $bounce;
+	transition: letter-spacing 0.3s $bounce, margin-bottom 0.17s $bounce, margin-top 0.17s $bounce, font-size 0.17s $bounce;
 	display: block;
 	position: relative;
-	margin-top: 0px;
-	margin-bottom: 0px;
+	margin-top: 0;
+	margin-bottom: 0;
 	// letter-spacing: .2em !important;
-	&.clicked, &:focus {
+	&:not(.inactive).clicked,
+	&:not(.inactive):focus {
 		font-size: 125%;
 		margin-top: -50px;
 		margin-bottom: -50px;
-		letter-spacing: .2em;
+		letter-spacing: 0.2em;
 	}
+
 	&[disabled] {
 		box-shadow: none !important;
 	}
@@ -402,33 +457,43 @@ footer {
 
 a {
 	font-weight: 700;
-	transition: bottom .3s ease, background-color .3s, color .3s, box-shadow .3s ease;
+	transition: bottom 0.3s ease, background-color 0.3s, color 0.3s, box-shadow 0.3s ease;
 	cursor: pointer;
+
 	&[href^="https"] {
 		cursor: ne-resize;
 	}
+
 	main & {
 		text-decoration: underline;
 		text-decoration-thickness: 3px;
 	}
+
 	footer & {
 		color: transparent;
-		&:hover, &:focus {
+
+		&:focus,
+		&:hover {
 			color: rgba($b, .4);
+
 			&#twitter {
 				color: #1da1f2ff;
 			}
+
 			&#youtube {
 				color: #ff0000ff;
 			}
+
 			&#github {
 				color: #24292eff;
 			}
+
 			&#twitch {
 				color: #a970ffff;
 			}
 		}
 	}
+
 	footer:hover & {
 		color: rgba($b, .4);
 	}
@@ -451,6 +516,10 @@ p {
 	color: $de;
 	font-weight: 700;
 	text-shadow: 0 2px 4px rgba($de, .3);
+
+	&[href]:hover {
+		color: $meh;
+	}
 }
 
 .meh {
@@ -463,9 +532,14 @@ p {
 	color: $pre;
 	font-weight: 700;
 	text-shadow: 0 2px 4px rgba($pre, .3);
+
+	&[href]:hover {
+		color: $meh;
+	}
 }
 
-.spacer, .gridSpacer {
+.gridSpacer,
+.spacer {
 	display: block;
 	position: relative;
 	width: 100%;
@@ -475,96 +549,113 @@ p {
 	height: 50px;
 }
 
-.gridSpacer {
-	height: 100%;
-}
-
-.hidden {
-	display: none;
-}
-
 svg {
-	transition: fill .3s;
+	transition: fill 0.3s;
 	height: 100%;
 }
 
 .select {
-	$ansH: 32px;
 	font-weight: 700;
 	display: inline-block;
 	position: relative;
 	vertical-align: middle;
-	margin: 4px 0;
-	height: $ansH;
+	// margin: 4px 0;
+	max-height: clamp(24px,4vmin,32px);
 	top: -2px;
 	text-align: center;
-	overflow: hidden;
 	box-sizing: content-box;
 	white-space: nowrap;
 	outline: none;
-	transition: height .3s ease, margin .3s ease, border .1s ease;
 	border-bottom: 3px solid $b;
 	overflow: visible;
-	.answer, .blank {
+	// transition: max-height 0.3s ease, top 0.3s ease, border 0.3s;
+	transition: max-height 0.3s ease, border 0.3s;
+
+	.answer,
+	.blank {
 		position: relative;
+		pointer-events: none;
+		display: block;
 		cursor: pointer;
 		box-sizing: border-box;
-		top: -$ansH;
-		height: $ansH;
-		line-height: 23px;
-		padding: 4px 8px;
-		transition: transform .17s ease, height .3s ease, background-color .3s, top .3s ease, color .3s, opacity .3s;
+		line-height: clamp(20px, 3vmin, 22px);
+		height: clamp(24px,4vmin,32px);
+		padding: clamp(2px, 0.5vmin, 4px) clamp(4px, 1vmin, 8px);
+		transition: transform 0.17s ease, background-color 0.3s, top 0.3s ease, color 0.3s, opacity 0.3s;
 		border-radius: 10px;
 		opacity: 0;
+		-webkit-user-select: none;
+		   -moz-user-select: none;
+		    -ms-user-select: none;
+		        user-select: none;
+
 		&.selected {
 			color: $w;
 			opacity: 1;
 			z-index: 4;
-			&.topAns {
-				top: 0px;
+			-webkit-user-select: text;
+			   -moz-user-select: text;
+			    -ms-user-select: text;
+			        user-select: text;
+
+			&.blank {
+				top: clamp(-32px, -4vmin, -24px);
 			}
+
 			&.botAns {
-				top: (-2*$ansH);
+				top: clamp(-64px, -8vmin, -48px);
 			}
 		}
 	}
+
 	.blank {
-		color: rgba(0,0,0,0);
-		line-height: 14px;
 		transform: scale(1);
 	}
+
 	&.open {
-		height: (3*$ansH - 8px);
-		.answer, .blank {
-			top: 0px !important;
+		max-height: clamp(72px, 12vmin, 96px);
+
+		.answer,
+		.blank {
+			pointer-events: all !important;
+			top: 0 !important;
 			z-index: 3;
 			opacity: 1;
+
 			&:hover {
-				transition: height .3s ease, background-color .3s, top .3s ease, color .3s, opacity .3s;
+				transition: height 0.3s ease, background-color 0.3s, top 0.3s ease, color 0.3s, opacity 0.3s;
 			}
 		}
+
 		.blank {
-			height: ($ansH - 7px);
 			z-index: 2;
 		}
 	}
+
 	&.open.selectionMade {
 		.blank {
 			color: rgba(0,0,0,.4);
+
 			&:hover {
 				transform: scale(1.25);
 			}
 		}
 	}
-	&.open, &.selectionMade {
-		border-bottom-width: 0px;
+
+	&.open,
+	&.selectionMade {
+		border-bottom-width: 0;
 	}
 }
 
-button, input, textarea {
+button,
+input,
+textarea {
 	border-radius: 10px;
 	box-sizing: border-box;
 	padding: 8px 18px 8px 20px;
+	transition: background-color 0.3s, color 0.3s, letter-spacing 0.3s $bounce, border 0.3s, padding 0.3s;
+
 	&.full-width {
 		width: 100%;
 	}
@@ -576,33 +667,43 @@ button {
 	font-size: 60%;
 	width: auto;
 	text-transform: uppercase;
-	letter-spacing: .2em;
-	transition: background-color .3s, color .3s, letter-spacing .3s $bounce;
+	letter-spacing: 0.2em;
 	cursor: pointer;
-	&:not([disabled]) {
-		&:hover, &:focus {
-			letter-spacing: .4em;
+
+	&:not(.inactive) {
+		&:focus,
+		&:hover {
+			letter-spacing: 0.4em;
 		}
 	}
 }
 
-input, textarea {
+input,
+textarea {
 	display: inline-block;
 	width: 100%;
 	font-size: 70%;
 	position: relative;
-	border: 3px solid $w;
+	border: 0 solid $w;
 	box-sizing: border-box;
 	cursor: text;
+
 	&::-webkit-input-placeholder {
 		color: rgba($b, .5);
 		letter-spacing: 0;
-		-webkit-transition: border-color .3s, color .3s;
-		transition: border-color .3s, color .3s;
+		-webkit-transition: border-color 0.3s, color 0.3s;
+		transition: border-color 0.3s, color 0.3s;
 	}
-	&:focus::-webkit-input-placeholder {
-		color: rgba($b, .25);
+
+	&:focus {
+		border-width: 3px;
+		padding: 5px 15px 5px 17px;
+
+		&::-webkit-input-placeholder {
+			color: rgba($b, .25);
+		}
 	}
+
 	&:not(:focus):hover::-webkit-input-placeholder {
 		font-weight: 700;
 		letter-spacing: -.0335em;
@@ -613,21 +714,6 @@ textarea {
 	position: relative;
 	resize: vertical;
 	min-height: 67px;
-	&:after {
-		content: "0 / 300";
-		// display: inline-block;
-		// position: absolute;
-		// right: 10px;
-		// bottom: 10px;
-		// font-size: 10px;
-		// font-weight: 700;
-		// color: rgba($b, 0.25);
-	}
-	&:hover {
-		&:after {
-			color: $meh;
-		}
-	}
 }
 
 #startButton {
@@ -638,14 +724,25 @@ textarea {
 	background-color: transparent;
 }
 
+.scoreSpacer {
+	// display: block;
+	width: 100%;
+	min-height: 20vh;
+}
+
 #scoreMeter {
 	display: flex;
-	position: relative;
+	position: sticky;
+	top: 20px;
 	justify-content: center;
+	background-color: darken($w, 10%);
+	box-shadow: 0 0 12px 36px darken($w, 10%);
 
-	width: calc(100% - 25px);
-	max-width: 1440px;
-	padding: 50px 0;
+	width: clamp(300px, calc(100% - 60px), 1500px);
+	padding: clamp(30px, 8vh, 55px) 0 38px;
+	margin-bottom: 12px;
+	z-index: 5;
+
 	.bar {
 		display: inline-block;
 		position: relative;
@@ -653,89 +750,164 @@ textarea {
 		box-sizing: border-box;
 		margin: 1px;
 		border-radius: 4px;
+
 		&:after {
-			position: absolute;
-			font-size: 50%;
+			position: relative;
+			font-size: 70%;
 			text-transform: uppercase;
 			top: 20px;
 			font-weight: 700;
 		}
 	}
+
 	.deBar {
 		flex-basis: 40%;
 		background-color: $de;
+
 		&:after {
 			content: "Descriptivist";
 			left: 0;
 			color: $de;
 		}
 	}
+
 	.mehBar {
 		flex-basis: 20%;
 		background-color: $meh;
+		text-align: center;
+
 		&:after {
 			content: "meh";
 			color: $meh;
-			left: calc(50% - 13px);
 		}
 	}
+
 	.preBar {
 		flex-basis: 40%;
 		background-color: $pre;
+		text-align: right;
+
 		&:after {
 			content: "Prescriptivist";
 			right: 0;
 			color: $pre;
 		}
 	}
+
 	#indicator {
 		display: block;
 		position: absolute;
 		box-sizing: content-box;
-		left: calc(50% - 8px);
-		top: 30px;
-		width: 0;
-		height: 0;
-		border: 8px solid transparent;
-		border-top-width: 16px;
-		border-top-color: $meh;
-		border-radius: 10px;
-		text-align: center;
-		transition: border-top-color .5s;
-		p {
-			color: $meh;
+		top: 35px;
+
+		&:after {
+			content: "";
 			position: absolute;
-			font-size: 80%;
+			left: calc(50% - 8px);
+			width: 0;
+			height: 0;
+			border: 8px solid transparent;
+			border-top-width: 16px;
+			border-radius: 10px;
+			transition: border-color 0.3s;
+		}
+		text-align: center;
+		transition: border-top-color 0.5s;
+		white-space: nowrap;
+
+		p {
+			position: relative;
+			display: inline-block;
+			font-size: 90%;
 			font-weight: 900;
-			line-height: 19px;
-			top: -36px;
-			left: -35px;
-			width: 70px;
+			line-height: 21px;
+			top: -30px;
 			text-align: center;
-			transition: color .5s;
-			&:before, &:after {
+			transition: color 0.5s;
+
+			&:after,
+			&:before {
 				position: relative;
 				font-size: 50%;
 				letter-spacing: -.02em;
 				font-weight: 700;
-				color: lighten(black, 40%);
 			}
 		}
+
 		#indicatorVal {
 			text-align: right;
-			left: calc(-3ch - 42px);
+
 			&:before {
-				content: 'Answered';
+				content: "Answered";
 				margin-right: 3px;
 				top: -7px;
 			}
 		}
+
 		#qNum {
 			text-align: left;
-			left: calc(3ch - 30px);
+
 			&:after {
-				content: 'questions';
+				content: "questions";
 				margin-left: 3px;
+			}
+		}
+	}
+}
+
+#scoreCount {
+	display: flex;
+	justify-content: space-around;
+
+	position: sticky;
+	top: 125px;
+	width: 100%;
+	z-index: 6;
+	transition: opacity 0.3s;
+}
+
+#scoreHist {
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-gap: 25px;
+	justify-items: center;
+	width: clamp(280px, calc(100% - 80px), 1500px);
+	max-width: 1500px;
+
+	.card {
+		width: 50%;
+		max-width: 750px;
+		font-size: 80%;
+		line-height: 1.1em;
+		padding: 6px 10px;
+
+		&.deCard {
+			justify-self: start;
+		}
+
+		&.preCard {
+			justify-self: end;
+		}
+
+		.answer {
+			color: $w;
+			position: relative;
+			margin: auto;
+		}
+
+		.deAns > .answer {
+			background-color: $pre;
+
+			&.selected {
+				background-color: $de;
+			}
+		}
+
+		.preAns > .answer {
+			background-color: $de;
+
+			&.selected {
+				background-color: $pre;
 			}
 		}
 	}
@@ -752,6 +924,10 @@ $types: (
 $sD: 6px;
 $cD: 3px;
 
+// /‾‾‾ /‾‾‾\ |    /‾‾‾\ |‾‾\
+// |    |   | |    |   | |__/
+// \___ \___/ |___ \___/ |  \
+
 @each $type, $col in $types {
 	$cardOutShad: $sD $sD (2*$sD) (-$sD) rgba($col, .6);
 	$cardOutHlgh: (-$sD) (-$sD) (2*$sD) (-$sD) $w;
@@ -763,65 +939,120 @@ $cD: 3px;
 	$curInnShad: (-$cD/2) (-$cD/2) ($cD) (-$cD) rgba($col, .5) inset;
 	$curInnHlgh: ($cD/2) ($cD/2) ($cD) (-$cD) $w inset;
 	$curShad: $curOutShad, $curOutHlgh, $curInnShad, $curInnHlgh;
+
 	body.status-#{$type} {
-		box-shadow: 0 0 120px rgba($col, .2) inset;
+
 		::-moz-selection {
 			background-color: rgba($col, .25);
 		}
+
 		::selection {
 			background-color: rgba($col, .25);
 		}
+
 		#sitelogo {
-			&:focus, &:hover, &.active {
+			&.active,
+			&:focus,
+			&:hover {
 				svg {
 					fill: $col;
 				}
 			}
 		}
+
 		#statusGraphic svg {
 			@if $col == $pre {
 				bottom: 54px;
-			} @else if $col == $meh {
+			} @else
+			if $col == $meh {
 				bottom: 27px;
 			} @else {
-				bottom: 0px;
+				bottom: 0;
 			}
 		}
-		#startButton:hover, #startButton:focus, a:hover, a:focus, a.active, #GitHubPrj:hover, .answer, #scoreMeter>#indicator.set>p, #cursor.mousedown:after {
+
+		#GitHubPrj:hover,
+		#cursor.mousedown:after,
+		#indicator > p,
+		#indicator > p:after,
+		#indicator > p:before,
+		#startButton:focus,
+		#startButton:hover,
+		.answer,
+		a.active,
+		a:focus,
+		a:hover:not(.de):not(.pre) {
 			color: rgba($col, 1.0);
 			text-shadow: 0 2px 4px rgba($col, .3);
 		}
-		button, .selected {
+
+		.select,
+		a,
+		button {
+			&:focus-visible {
+				outline: 3px solid $col;
+				outline-offset: 4px;
+			}
+		}
+
+		// Adds focus-visible functionality for safari
+		// .safari {
+		// 	.select,
+		// 	a,
+		// 	button {
+		// 		&:focus {
+		// 			outline: 3px solid $col;
+		// 			outline-offset: 4px;
+		// 		}
+		// 	}
+		// }
+
+		.selected,
+		button {
 			background-color: $col;
 		}
-		input, textarea {
+
+		input,
+		textarea {
 			&:focus {
 				border-color: $col;
 			}
+
+			&:focus-visible {
+				border-color: $col;
+			}
+
 			&:not(:focus):hover::-webkit-input-placeholder {
 				color: $col;
 			}
 		}
+
 		#cursor {
 			color: $col;
 			border-color: $col;
 			box-shadow: $curShad;
+
 			&:after {
 				color: $col;
 			}
-			&.inputHover {
+
+			&.inputHover:not(.link):not(.hover) {
 				background-color: $col;
 			}
 		}
+
 		footer {
 			border-bottom-color: $col;
 		}
-		#scoreMeter>#indicator.set {
+
+		#scoreMeter > #indicator:after {
 			border-top-color: $col;
 		}
+
 		.card {
 			box-shadow: $cardShad;
 		}
+
 		.select {
 			&.open.selectionMade {
 				.blank:hover {
@@ -832,8 +1063,8 @@ $cD: 3px;
 	}
 }
 
-.select:not(.selectionMade)~button, button.inactive, button[disabled] {
-	pointer-events: none !important;
+button.inactive {
+	letter-spacing: 0.2em;
 	background-color: lightgray !important;
 }
 
@@ -847,78 +1078,58 @@ $cD: 3px;
 	max-width: 1000px;
 }
 
-#preCard,
-#mehCard,
-#deCard {
+#deDef,
+#mehDef,
+#preDef {
 	color: $w;
 	font-size: 85%;
 	line-height: 110%;
 	box-sizing: border-box;
 	width: 100%;
 	padding: 15px;
+
+	::-moz-selection {
+		background-color: rgba($w, .25);
+	}
+
+	::selection {
+		background-color: rgba($w, .25);
+	}
+
 	p {
 		margin: 0;
 	}
 }
 
-#preCard {
+body .card.preCard {
+	box-shadow: 6px 6px 12px -6px rgba($pre, .5), -6px -6px 12px -6px $w, -3px -3px 6px -6px rgba($pre, .5) inset, 3px 3px 6px -6px $w inset;
+}
+
+body .card.mehCard {
+	box-shadow: 6px 6px 12px -6px rgba($meh, .5), -6px -6px 12px -6px $w, -3px -3px 6px -6px rgba($meh, .5) inset, 3px 3px 6px -6px $w inset;
+}
+
+body .card.deCard {
+	box-shadow: 6px 6px 12px -6px rgba($de, .5), -6px -6px 12px -6px $w, -3px -3px 6px -6px rgba($de, .5) inset, 3px 3px 6px -6px $w inset;
+}
+
+body .card.invCard {
+	box-shadow: 6px 6px 12px -6px rgba(darken($w, 50%), .5), -6px -6px 12px -6px $w, -3px -3px 6px -6px rgba(darken($w, 50%), .5) inset, 3px 3px 6px -6px $w inset;
+}
+
+#preDef {
 	background: $pre;
-	box-shadow: 6px 6px 12px -6px rgba($pre, .5),
-	-6px -6px 12px -6px $w,
-	-3px -3px 6px -6px rgba($pre, .5) inset,
-	3px 3px 6px -6px $w inset;
 }
-#mehCard {
+
+#mehDef {
 	background: $meh;
-	box-shadow: 6px 6px 12px -6px rgba($meh, .5),
-	-6px -6px 12px -6px $w,
-	-3px -3px 6px -6px rgba($meh, .5) inset,
-	3px 3px 6px -6px $w inset;
 }
-#deCard {
+
+#deDef {
 	background: $de;
-	box-shadow: 6px 6px 12px -6px rgba($de, .5),
-	-6px -6px 12px -6px $w,
-	-3px -3px 6px -6px rgba($de, .5) inset,
-	3px 3px 6px -6px $w inset;
 }
 
-@media only screen and (max-width: 650px) {
-	header, footer {
-		justify-content: center;
-	}
-	header>* {
-		width: 100%;
-		margin-bottom: 16px;
-		&:last-child {
-			margin: 0;
-		}
-	}
-	#main .content {
-		padding: 5vw;
-	}
-	#startButton {
-		font-size: 27px;
-		margin: 9px 0;
-		padding: 0px;
-	}
-	footer {
-		color: #0005;
-		>*, #GitHubPrj {
-			margin: auto;
-			width: 100%;
-		}
-	}
-}
-
-@media only screen and (max-height: 700px) {
-	#main #startScreen {
-		padding-top: calc(700px - 100vh);
-	}
-}
-
-@media only screen and (max-height: 450px) {
-	#main #startScreen {
-		padding-top: calc(400px - 50vh);
-	}
+.hidden {
+	display: none !important;
+	opacity: 0;
 }
