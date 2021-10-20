@@ -1,9 +1,9 @@
 $w: white;
 $b: black;
 
-$de: #00B7E2;
+$de: #004A80; /*#00B7E2;*/
 $meh: #5200D3;
-$pre: #FF0062;
+$pre: #8F005F; /*#FF0062;*/
 
 $bounce: cubic-bezier(0.4, 0, 0.5, 1.75);
 
@@ -650,7 +650,8 @@ svg {
 
 button,
 input,
-textarea {
+textarea,
+.keyboard-key {
 	border-radius: 10px;
 	box-sizing: border-box;
 	padding: 8px 18px 8px 20px;
@@ -732,6 +733,7 @@ textarea {
 
 #scoreMeter {
 	display: flex;
+	position: -webkit-sticky;
 	position: sticky;
 	top: 20px;
 	justify-content: center;
@@ -859,6 +861,8 @@ textarea {
 	display: flex;
 	justify-content: space-around;
 
+	position: -webkit-sticky;
+
 	position: sticky;
 	top: 125px;
 	width: 100%;
@@ -910,6 +914,103 @@ textarea {
 				background-color: $pre;
 			}
 		}
+	}
+}
+
+#keyboardControls {
+	display: flex;
+	flex-direction: row;
+	gap: 30px;
+	align-items: flex-end;
+	.key-group {
+		display: flex;
+		flex-direction: row;
+		gap: 9px;
+		&.three-keys {
+			display: grid;
+			grid-template-columns: repeat(3, minmax(45px, 1fr));
+		}
+	}
+	.keyboard-key {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		height: 45px;
+		min-width: 45px;
+		border: 3px solid;
+		text-align: center;
+		vertical-align: middle;
+		padding: 8px 12px;
+		position: relative;
+
+		&:before {
+			display: block;
+			position: relative;
+			font-size: 16px;
+			line-height: 16px;
+			font-weight: 700;
+			text-align: center;
+		}
+
+		&:after {
+			display: block;
+			position: absolute;
+			bottom: 60%;
+			opacity: 0;
+			pointer-events: none;
+			padding: 12px 8px;
+		}
+
+		&:hover:after {
+			bottom: 90%;
+			opacity: 1;
+		}
+
+		&.spacebar-key {
+			&:before {
+				content: "space";
+				width: 250px;
+			}
+			&:after {
+				content: "Space bar info";
+			}
+		}
+
+		&.esc-key:before {
+			content: "esc";
+		}
+
+		&.shift-key:before {
+			content:"⇧ shift";
+		}
+		&.tab-key:before {
+			content:"⇥ tab";
+		}
+		&.return-key:before {
+			content:"⏎ retun";
+		}
+		&.up-arrow:before {
+			content:"↑";
+			font-size: 110%;
+		}
+		&.left-arrow:before {
+			content:"←";
+			font-size: 110%;
+		}
+		&.right-arrow:before {
+			content:"→";
+			font-size: 110%;
+		}
+		&.down-arrow:before {
+			content:"↓";
+			font-size: 110%;
+		}
+	}
+	.blank-key {
+		display: block;
+		height: 45px;
+		min-width: 45px;
 	}
 }
 
@@ -988,7 +1089,8 @@ $cD: 3px;
 
 		.select,
 		a,
-		button {
+		button,
+		.keyboard-key {
 			&:focus-visible {
 				outline: 3px solid $col;
 				outline-offset: 4px;
@@ -1014,11 +1116,7 @@ $cD: 3px;
 
 		input,
 		textarea {
-			&:focus {
-				border-color: $col;
-			}
-
-			&:focus-visible {
+			&:focus, &:focus-visible {
 				border-color: $col;
 			}
 
@@ -1051,6 +1149,21 @@ $cD: 3px;
 
 		.card {
 			box-shadow: $cardShad;
+		}
+
+		#keyboardControls {
+			.keyboard-key {
+				border-color: $col;
+				&:before {
+					color: $col;
+				}
+				&:hover, &:focus, &:focus-visible {
+					background-color: $col;
+					&:before {
+						color: $w;
+					}
+				}
+			}
 		}
 
 		.select {
